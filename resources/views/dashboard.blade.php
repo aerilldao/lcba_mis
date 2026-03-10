@@ -107,7 +107,7 @@
 
                 <!-- Detailed Counters -->
                 <div class="card" style="width: 100%; padding: 2rem; display: flex; flex-direction: column; gap: 1rem;">
-                    <h3 style="color: var(--primary-color); font-size: 1.15rem; margin-bottom: 0.5rem;"> Enrollment breakdown</h3>
+                    <h3 style="color: var(--primary-color); font-size: 1.15rem; margin-bottom: 0.5rem;"> Detailed Enrollment breakdown</h3>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1;">
                         <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column;">
