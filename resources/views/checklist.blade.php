@@ -119,9 +119,10 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 3rem;
             width: 100%;
+            max-width: 800px;
         }
 
         .form-column {
@@ -140,14 +141,79 @@
             max-width: 100%;
         }
 
+        .field-row {
+            display: grid;
+            gap: 1.5rem;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            min-width: 220px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: flex-start;
+            padding-top: 0; /* Align with input titles */
+            margin-top: 2px; /* Fine-tune baseline alignment with lighter labels */
+        }
+
+        .field-container {
+            display: grid;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .field-row {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .sub-grid {
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(30, 58, 138, 0.2);
+            border-radius: 20px;
+            border: 2px solid #f8fafc;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-y: scroll !important; /* Force scrollbar */
+            height: auto !important;
+        }
+
+        body {
+            display: block !important;
+            height: auto !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            min-height: 100vh;
+        }
     </style>
 </head>
-<body style="align-items: flex-start; background-color: #f8fafc; display: block;">
+<body style="background-color: #f8fafc; display: block !important; overflow-y: auto !important; margin: 0; padding: 0;">
     <!-- Main Header -->
     <nav class="checklist-nav">
         <div class="checklist-nav-left">
@@ -170,94 +236,148 @@
     <main class="checklist-content">
         <div class="card" style="width: 100%; padding: 2.5rem; max-width: 100%;">
             
-            <div class="form-grid">
+            <div class="form-grid" style="max-width: 100%;">
                 <!-- ID/Header Section -->
                 <div class="input-group">
                     <label for="id_no">ID NO</label>
                     <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number">
                 </div>
-                <div style="grid-column: 1 / -1;"></div>
 
                 <!-- Student Information -->
                 <div class="form-column">
                     <h3 class="form-section-title">Student Information</h3>
-                    <div class="input-group full-width">
-                        <label>Last Name</label>
-                        <input type="text" name="student_last_name" placeholder="Last Name">
-                    </div>
-                    <div class="input-group full-width">
-                        <label>First Name</label>
-                        <input type="text" name="student_first_name" placeholder="First Name">
-                    </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Middle Name</label>
-                            <input type="text" name="student_middle_name" placeholder="Middle Name">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Suffix</label>
-                            <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
-                        </div>
-                    </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Birthdate</label>
-                            <input type="date" name="student_birthdate">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Sex</label>
-                            <input type="text" name="student_sex" placeholder="Male / Female">
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <span class="section-label">FULL NAME</span>
+                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="input-group full-width">
+                                <label>Last Name</label>
+                                <input type="text" name="student_last_name" placeholder="Last Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>First Name</label>
+                                <input type="text" name="student_first_name" placeholder="First Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Middle Name</label>
+                                <input type="text" name="student_middle_name" placeholder="Middle Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Suffix</label>
+                                <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
+                            </div>
                         </div>
                     </div>
-                    <div class="input-group full-width">
-                        <label>Age</label>
-                        <input type="number" name="student_age" placeholder="Age">
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <span class="section-label">OTHER DETAILS</span>
+                        <div class="field-container" style="grid-template-columns: repeat(3, 1fr);">
+                            <div class="input-group full-width">
+                                <label>Birthdate</label>
+                                <input type="date" name="student_birthdate">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Sex</label>
+                                <input type="text" name="student_sex" placeholder="Male / Female">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Age</label>
+                                <input type="number" name="student_age" placeholder="Age">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Parents Information -->
+                <!-- Address Information -->
+                <div class="form-column">
+                    <h3 class="form-section-title">Address Information</h3>
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <span class="section-label">ADDRESS</span>
+                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="input-group full-width">
+                                <label>House No.</label>
+                                <input type="text" name="house_no" placeholder="House No.">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Street Name</label>
+                                <input type="text" name="street_name" placeholder="Street Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Barangay</label>
+                                <input type="text" name="barangay" placeholder="Barangay">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Zip Code</label>
+                                <input type="text" name="zip_code" placeholder="Zip Code">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <div style="grid-column: 2;">
+                            <div class="field-container" style="grid-template-columns: repeat(3, 1fr);">
+                                <div class="input-group full-width">
+                                    <label>Municipality / City</label>
+                                    <input type="text" name="municipality_city" placeholder="Municipality / City">
+                                </div>
+                                <div class="input-group full-width">
+                                    <label>Province</label>
+                                    <input type="text" name="province" placeholder="Province">
+                                </div>
+                                <div class="input-group full-width">
+                                    <label>Country</label>
+                                    <input type="text" name="country" value="Philippines">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Father's Information -->
                 <div class="form-column">
                     <h3 class="form-section-title">Father's Information</h3>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Last Name</label>
-                            <input type="text" name="father_last_name" placeholder="Last Name">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>First Name</label>
-                            <input type="text" name="father_first_name" placeholder="First Name">
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <span class="section-label">FATHER'S NAME</span>
+                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="input-group full-width">
+                                <label>Last Name</label>
+                                <input type="text" name="father_last_name" placeholder="Last Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>First Name</label>
+                                <input type="text" name="father_first_name" placeholder="First Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Middle Name</label>
+                                <input type="text" name="father_middle_name" placeholder="Middle Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Suffix</label>
+                                <input type="text" name="father_suffix" placeholder="Suffix">
+                            </div>
                         </div>
                     </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Middle Name</label>
-                            <input type="text" name="father_middle_name" placeholder="Middle Name">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Suffix</label>
-                            <input type="text" name="father_suffix" placeholder="Suffix">
-                        </div>
-                    </div>
+                </div>
 
-                    <h3 class="form-section-title" style="margin-top: 2rem;">Mother's Information</h3>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Last Name</label>
-                            <input type="text" name="mother_last_name" placeholder="Last Name">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>First Name</label>
-                            <input type="text" name="mother_first_name" placeholder="First Name">
-                        </div>
-                    </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Middle Name</label>
-                            <input type="text" name="mother_middle_name" placeholder="Middle Name">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Suffix</label>
-                            <input type="text" name="mother_suffix" placeholder="Suffix">
+                <!-- Mother's Information -->
+                <div class="form-column">
+                    <h3 class="form-section-title">Mother's Information</h3>
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <span class="section-label">MOTHER'S NAME</span>
+                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="input-group full-width">
+                                <label>Last Name</label>
+                                <input type="text" name="mother_last_name" placeholder="Last Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>First Name</label>
+                                <input type="text" name="mother_first_name" placeholder="First Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Middle Name</label>
+                                <input type="text" name="mother_middle_name" placeholder="Middle Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Suffix</label>
+                                <input type="text" name="mother_suffix" placeholder="Suffix">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -265,68 +385,33 @@
                 <!-- Guardian Information -->
                 <div class="form-column">
                     <h3 class="form-section-title">Guardian's Information</h3>
-                    <div class="input-group full-width">
-                        <label>Last Name</label>
-                        <input type="text" name="guardian_last_name" placeholder="Last Name">
-                    </div>
-                    <div class="input-group full-width">
-                        <label>First Name</label>
-                        <input type="text" name="guardian_first_name" placeholder="First Name">
-                    </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Middle Name</label>
-                            <input type="text" name="guardian_middle_name" placeholder="Middle Name">
+                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
+                        <span class="section-label">GUARDIAN'S NAME</span>
+                        <div class="field-container" style="grid-template-columns: repeat(5, 1fr);">
+                            <div class="input-group full-width">
+                                <label>Last Name</label>
+                                <input type="text" name="guardian_last_name" placeholder="Last Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>First Name</label>
+                                <input type="text" name="guardian_first_name" placeholder="First Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Middle Name</label>
+                                <input type="text" name="guardian_middle_name" placeholder="Middle Name">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Suffix</label>
+                                <input type="text" name="guardian_suffix" placeholder="Suffix">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Contact Number</label>
+                                <input type="text" name="guardian_contact" placeholder="Contact">
+                            </div>
                         </div>
-                        <div class="input-group full-width">
-                            <label>Suffix</label>
-                            <input type="text" name="guardian_suffix" placeholder="Suffix">
-                        </div>
-                    </div>
-                    <div class="input-group full-width">
-                        <label>Contact Number</label>
-                        <input type="text" name="guardian_contact" placeholder="Contact Number">
                     </div>
                 </div>
 
-                <!-- Address Information -->
-                <div class="form-column">
-                    <h3 class="form-section-title">Address Information</h3>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>House No.</label>
-                            <input type="text" name="house_no" placeholder="House No.">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Street Name</label>
-                            <input type="text" name="street_name" placeholder="Street Name">
-                        </div>
-                    </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Barangay</label>
-                            <input type="text" name="barangay" placeholder="Barangay">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Zip Code</label>
-                            <input type="text" name="zip_code" placeholder="Zip Code">
-                        </div>
-                    </div>
-                    <div class="input-group full-width">
-                        <label>Municipality / City</label>
-                        <input type="text" name="municipality_city" placeholder="Municipality / City">
-                    </div>
-                    <div class="sub-grid">
-                        <div class="input-group full-width">
-                            <label>Province</label>
-                            <input type="text" name="province" placeholder="Province">
-                        </div>
-                        <div class="input-group full-width">
-                            <label>Country</label>
-                            <input type="text" name="country" value="Philippines">
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div style="margin-top: 3rem; display: flex; justify-content: flex-end; gap: 1rem;">
