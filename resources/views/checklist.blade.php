@@ -47,7 +47,7 @@
             padding: 0.75rem 2rem;
             color: white;
             position: fixed;
-            top: 82px; /* Adjusted based on header height */
+            top: 82px;
             left: 0;
             z-index: 40;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -61,36 +61,119 @@
         }
 
         .checklist-content {
-            margin-top: 150px; /* Space for both navbars */
+            margin-top: 150px;
             padding: 2rem;
             width: 100%;
             max-width: 1400px;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.5rem;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .input-group {
-            margin-bottom: 1.5rem;
-            max-width: 300px;
+        /* Section card */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: opacity 0.35s ease;
         }
 
-        .input-group label {
-            display: block;
-            font-weight: 600;
+        .section-title {
+            color: var(--primary-color);
             font-size: 0.85rem;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(30, 58, 138, 0.1);
+        }
+
+        /* Horizontal row of fields */
+        .field-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        /* Individual field */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex: 1 1 180px;
+        }
+
+        .field.narrow  { flex: 0 1 140px; }
+        .field.medium  { flex: 1 1 200px; }
+        .field.wide    { flex: 1 1 260px; }
+        .field.xwide   { flex: 2 1 300px; }
+
+        .field label {
+            font-weight: 600;
+            font-size: 0.78rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
         }
 
-        .input-group input {
+        .field input,
+        .field select {
             width: 100%;
-            padding: 0.8rem 1.2rem;
+            padding: 0.65rem 1rem;
             border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: #ffffff;
+            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+
+        /* Locked / disabled state */
+        .field input:disabled,
+        .field select:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .section-locked {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .section-unlocked {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ID hint text */
+        .id-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-style: italic;
+        }
+
+        /* ID card input styling */
+        #id_no {
+            padding: 0.65rem 1rem;
+            border: 1.5px solid rgba(30, 58, 138, 0.3);
             border-radius: 10px;
             outline: none;
             font-family: inherit;
@@ -98,129 +181,30 @@
             color: var(--text-main);
             background: #ffffff;
             transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
-
-        .form-section-title {
-            color: var(--primary-color);
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid rgba(30, 58, 138, 0.1);
-            grid-column: 1 / -1;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        .form-column {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .sub-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .input-group.full-width {
-            max-width: 100%;
-        }
-
-        .field-row {
-            display: grid;
-            gap: 1.5rem;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-label {
             min-width: 220px;
-            font-weight: 800;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: flex-start;
-            padding-top: 0; /* Align with input titles */
-            margin-top: 2px; /* Fine-tune baseline alignment with lighter labels */
         }
 
-        .field-container {
-            display: grid;
-            gap: 1.5rem;
-            flex: 1;
-        }
-
-        @media (max-width: 1024px) {
-            .field-row {
-                grid-template-columns: 1fr !important;
-            }
+        #id_no:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
         }
 
         @media (max-width: 768px) {
-            .sub-grid {
-                grid-template-columns: 1fr;
+            .field-row { flex-direction: column; }
+            .field, .field.narrow, .field.medium, .field.wide, .field.xwide {
+                flex: 1 1 100%;
             }
-        }
-
-        /* Custom Scrollbar Styles */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(30, 58, 138, 0.2);
-            border-radius: 20px;
-            border: 2px solid #f8fafc;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-color);
-        }
-
-        html {
-            scroll-behavior: smooth;
-            overflow-y: scroll !important; /* Force scrollbar */
-            height: auto !important;
-        }
-
-        body {
-            display: block !important;
-            height: auto !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            min-height: 100vh;
         }
     </style>
 </head>
-<body style="background-color: #f8fafc; display: block !important; overflow-y: auto !important; margin: 0; padding: 0;">
+<body style="align-items: flex-start; background-color: #f8fafc; display: block; overflow-y: auto; overflow-x: hidden;">
+
     <!-- Main Header -->
     <nav class="checklist-nav">
         <div class="checklist-nav-left">
             <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="checklist-nav-logo">
             <h1>CHECKLIST</h1>
         </div>
-        
         <a href="{{ route('dashboard') }}" class="btn-back" style="text-decoration: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Back to Dashboard
@@ -234,192 +218,207 @@
 
     <!-- Main Content -->
     <main class="checklist-content">
-        <div class="card" style="width: 100%; padding: 2.5rem; max-width: 100%;">
-            
-            <div class="form-grid" style="max-width: 100%;">
-                <!-- ID/Header Section -->
-                <div class="input-group">
-                    <label for="id_no">ID NO</label>
-                    <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number">
-                </div>
 
-                <!-- Student Information -->
-                <div class="form-column">
-                    <h3 class="form-section-title">Student Information</h3>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <span class="section-label">FULL NAME</span>
-                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
-                            <div class="input-group full-width">
-                                <label>Last Name</label>
-                                <input type="text" name="student_last_name" placeholder="Last Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>First Name</label>
-                                <input type="text" name="student_first_name" placeholder="First Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Middle Name</label>
-                                <input type="text" name="student_middle_name" placeholder="Middle Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Suffix</label>
-                                <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <span class="section-label">OTHER DETAILS</span>
-                        <div class="field-container" style="grid-template-columns: repeat(3, 1fr);">
-                            <div class="input-group full-width">
-                                <label>Birthdate</label>
-                                <input type="date" name="student_birthdate">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Sex</label>
-                                <input type="text" name="student_sex" placeholder="Male / Female">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Age</label>
-                                <input type="number" name="student_age" placeholder="Age">
-                            </div>
-                        </div>
-                    </div>
+        <!-- ID Number Section -->
+        <div class="section-card">
+            <div class="section-title">Student ID Lookup</div>
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <div>
+                    <label for="id_no" style="display: block; font-weight: 600; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem;">ID No.</label>
+                    <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number" autocomplete="off">
                 </div>
-
-                <!-- Address Information -->
-                <div class="form-column">
-                    <h3 class="form-section-title">Address Information</h3>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <span class="section-label">ADDRESS</span>
-                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
-                            <div class="input-group full-width">
-                                <label>House No.</label>
-                                <input type="text" name="house_no" placeholder="House No.">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Street Name</label>
-                                <input type="text" name="street_name" placeholder="Street Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Barangay</label>
-                                <input type="text" name="barangay" placeholder="Barangay">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Zip Code</label>
-                                <input type="text" name="zip_code" placeholder="Zip Code">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <div style="grid-column: 2;">
-                            <div class="field-container" style="grid-template-columns: repeat(3, 1fr);">
-                                <div class="input-group full-width">
-                                    <label>Municipality / City</label>
-                                    <input type="text" name="municipality_city" placeholder="Municipality / City">
-                                </div>
-                                <div class="input-group full-width">
-                                    <label>Province</label>
-                                    <input type="text" name="province" placeholder="Province">
-                                </div>
-                                <div class="input-group full-width">
-                                    <label>Country</label>
-                                    <input type="text" name="country" value="Philippines">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Father's Information -->
-                <div class="form-column">
-                    <h3 class="form-section-title">Father's Information</h3>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <span class="section-label">FATHER'S NAME</span>
-                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
-                            <div class="input-group full-width">
-                                <label>Last Name</label>
-                                <input type="text" name="father_last_name" placeholder="Last Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>First Name</label>
-                                <input type="text" name="father_first_name" placeholder="First Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Middle Name</label>
-                                <input type="text" name="father_middle_name" placeholder="Middle Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Suffix</label>
-                                <input type="text" name="father_suffix" placeholder="Suffix">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mother's Information -->
-                <div class="form-column">
-                    <h3 class="form-section-title">Mother's Information</h3>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <span class="section-label">MOTHER'S NAME</span>
-                        <div class="field-container" style="grid-template-columns: repeat(4, 1fr);">
-                            <div class="input-group full-width">
-                                <label>Last Name</label>
-                                <input type="text" name="mother_last_name" placeholder="Last Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>First Name</label>
-                                <input type="text" name="mother_first_name" placeholder="First Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Middle Name</label>
-                                <input type="text" name="mother_middle_name" placeholder="Middle Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Suffix</label>
-                                <input type="text" name="mother_suffix" placeholder="Suffix">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Guardian Information -->
-                <div class="form-column">
-                    <h3 class="form-section-title">Guardian's Information</h3>
-                    <div class="field-row" style="grid-template-columns: 220px 1fr;">
-                        <span class="section-label">GUARDIAN'S NAME</span>
-                        <div class="field-container" style="grid-template-columns: repeat(5, 1fr);">
-                            <div class="input-group full-width">
-                                <label>Last Name</label>
-                                <input type="text" name="guardian_last_name" placeholder="Last Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>First Name</label>
-                                <input type="text" name="guardian_first_name" placeholder="First Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Middle Name</label>
-                                <input type="text" name="guardian_middle_name" placeholder="Middle Name">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Suffix</label>
-                                <input type="text" name="guardian_suffix" placeholder="Suffix">
-                            </div>
-                            <div class="input-group full-width">
-                                <label>Contact Number</label>
-                                <input type="text" name="guardian_contact" placeholder="Contact">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-
-            <div style="margin-top: 3rem; display: flex; justify-content: flex-end; gap: 1rem;">
-                <button type="reset" class="btn-back" style="background: rgba(0,0,0,0.05); padding: 0.8rem 2rem;">Clear All</button>
-                <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
-            </div>
-
+            <p class="id-hint" id="id-hint">Enter an ID number to unlock the form fields below.</p>
         </div>
+
+        <!-- Student Information -->
+        <div class="section-card section-locked" id="section-student">
+            <div class="section-title">Student Information</div>
+            <div class="field-row">
+                <div class="field wide">
+                    <label>Last Name</label>
+                    <input type="text" name="student_last_name" placeholder="Last Name" disabled>
+                </div>
+                <div class="field wide">
+                    <label>First Name</label>
+                    <input type="text" name="student_first_name" placeholder="First Name" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Middle Name</label>
+                    <input type="text" name="student_middle_name" placeholder="Middle Name" disabled>
+                </div>
+                <div class="field narrow">
+                    <label>Suffix</label>
+                    <input type="text" name="student_suffix" placeholder="Jr., III, etc." disabled>
+                </div>
+                <div class="field medium">
+                    <label>Birthdate</label>
+                    <input type="date" name="student_birthdate" disabled>
+                </div>
+                <div class="field narrow">
+                    <label>Sex</label>
+                    <select name="student_sex" disabled>
+                        <option value="" disabled selected>Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="field narrow">
+                    <label>Age</label>
+                    <input type="number" name="student_age" placeholder="Age" disabled>
+                </div>
+            </div>
+        </div>
+
+        <!-- Father's Information -->
+        <div class="section-card section-locked" id="section-father">
+            <div class="section-title">Father's Information</div>
+            <div class="field-row">
+                <div class="field wide">
+                    <label>Last Name</label>
+                    <input type="text" name="father_last_name" placeholder="Last Name" disabled>
+                </div>
+                <div class="field wide">
+                    <label>First Name</label>
+                    <input type="text" name="father_first_name" placeholder="First Name" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Middle Name</label>
+                    <input type="text" name="father_middle_name" placeholder="Middle Name" disabled>
+                </div>
+                <div class="field narrow">
+                    <label>Suffix</label>
+                    <input type="text" name="father_suffix" placeholder="Suffix" disabled>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mother's Information -->
+        <div class="section-card section-locked" id="section-mother">
+            <div class="section-title">Mother's Information</div>
+            <div class="field-row">
+                <div class="field wide">
+                    <label>Last Name</label>
+                    <input type="text" name="mother_last_name" placeholder="Last Name" disabled>
+                </div>
+                <div class="field wide">
+                    <label>First Name</label>
+                    <input type="text" name="mother_first_name" placeholder="First Name" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Middle Name</label>
+                    <input type="text" name="mother_middle_name" placeholder="Middle Name" disabled>
+                </div>
+                <div class="field narrow">
+                    <label>Suffix</label>
+                    <input type="text" name="mother_suffix" placeholder="Suffix" disabled>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guardian's Information -->
+        <div class="section-card section-locked" id="section-guardian">
+            <div class="section-title">Guardian's Information</div>
+            <div class="field-row">
+                <div class="field wide">
+                    <label>Last Name</label>
+                    <input type="text" name="guardian_last_name" placeholder="Last Name" disabled>
+                </div>
+                <div class="field wide">
+                    <label>First Name</label>
+                    <input type="text" name="guardian_first_name" placeholder="First Name" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Middle Name</label>
+                    <input type="text" name="guardian_middle_name" placeholder="Middle Name" disabled>
+                </div>
+                <div class="field narrow">
+                    <label>Suffix</label>
+                    <input type="text" name="guardian_suffix" placeholder="Suffix" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Contact Number</label>
+                    <input type="text" name="guardian_contact" placeholder="Contact Number" disabled>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="section-card section-locked" id="section-address">
+            <div class="section-title">Address Information</div>
+            <div class="field-row">
+                <div class="field narrow">
+                    <label>House No.</label>
+                    <input type="text" name="house_no" placeholder="House No." disabled>
+                </div>
+                <div class="field medium">
+                    <label>Street Name</label>
+                    <input type="text" name="street_name" placeholder="Street Name" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Barangay</label>
+                    <input type="text" name="barangay" placeholder="Barangay" disabled>
+                </div>
+                <div class="field narrow">
+                    <label>Zip Code</label>
+                    <input type="text" name="zip_code" placeholder="Zip Code" disabled>
+                </div>
+                <div class="field xwide">
+                    <label>Municipality / City</label>
+                    <input type="text" name="municipality_city" placeholder="Municipality / City" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Province</label>
+                    <input type="text" name="province" placeholder="Province" disabled>
+                </div>
+                <div class="field medium">
+                    <label>Country</label>
+                    <input type="text" name="country" value="Philippines" disabled>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
+            <a href="{{ route('basic_education') }}" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Basic Education</a>
+            <a href="{{ route('collegiate') }}" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Collegiate &amp; Graduate Studies</a>
+        </div>
+
     </main>
+
+    <script>
+        const idInput = document.getElementById('id_no');
+        const idHint  = document.getElementById('id-hint');
+        const sectionIds = [
+            'section-student',
+            'section-father',
+            'section-mother',
+            'section-guardian',
+            'section-address'
+        ];
+
+        function toggleSections(unlock) {
+            sectionIds.forEach(function(id) {
+                const section = document.getElementById(id);
+                if (unlock) {
+                    section.classList.remove('section-locked');
+                    section.classList.add('section-unlocked');
+                    section.querySelectorAll('input, select').forEach(el => el.disabled = false);
+                } else {
+                    section.classList.remove('section-unlocked');
+                    section.classList.add('section-locked');
+                    section.querySelectorAll('input, select').forEach(el => el.disabled = true);
+                }
+            });
+            idHint.textContent = unlock
+                ? 'ID entered — form fields are now editable.'
+                : 'Enter an ID number to unlock the form fields below.';
+        }
+
+        idInput.addEventListener('input', function() {
+            toggleSections(this.value.trim().length > 0);
+        });
+    </script>
+
 </body>
 </html>

@@ -17,3 +17,11 @@ Route::post('/dashboard/notes', [DashboardController::class, 'updateNotes'])->mi
 Route::get('/checklist', function () {
     return view('checklist');
 })->middleware('auth')->name('checklist');
+
+Route::get('/basic-education', function () {
+    return view('basic_education');
+})->middleware('auth')->name('basic_education');
+
+Route::get('/collegiate', function () {
+    return view('collegiate');
+})->middleware('auth')->name('collegiate');
