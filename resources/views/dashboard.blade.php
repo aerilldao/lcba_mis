@@ -94,7 +94,7 @@
                 
                 <!-- Functions & General Stats -->
                 <div class="card" style="width: 100%; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
-                    <a href="{{ route('checklist') }}" target="_blank" class="btn-login" style="text-align: center; text-decoration: none; display: block; width: 100%;">Open Checklist</a>
+                    <a href="{{ route('checklist') }}" class="btn-login" style="text-align: center; text-decoration: none; display: block; width: 100%; position: relative; z-index: 10;">Open Checklist</a>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div style="background: rgba(59, 130, 246, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.1); text-align: center;">
