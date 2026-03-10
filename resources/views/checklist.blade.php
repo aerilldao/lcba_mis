@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <style>
-        .dashboard-nav {
+        .checklist-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -21,19 +21,19 @@
             z-index: 50;
         }
 
-        .dashboard-nav-left {
+        .checklist-nav-left {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .dashboard-nav-logo {
+        .checklist-nav-logo {
             height: 50px;
             width: auto;
             object-fit: contain;
         }
 
-        .dashboard-nav h1 {
+        .checklist-nav h1 {
             font-size: 1.5rem;
             font-weight: 800;
             color: var(--primary-color);
@@ -41,41 +41,96 @@
             margin: 0;
         }
 
-        .dashboard-content {
-            margin-top: 100px;
+        .sub-navbar {
+            background: var(--primary-color);
+            width: 100%;
+            padding: 0.75rem 2rem;
+            color: white;
+            position: fixed;
+            top: 82px; /* Adjusted based on header height */
+            left: 0;
+            z-index: 40;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sub-navbar span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .checklist-content {
+            margin-top: 150px; /* Space for both navbars */
             padding: 2rem;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            gap: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            max-width: 300px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            background: #ffffff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
     </style>
 </head>
-<body style="align-items: flex-start; background-color: #f8fafc;">
-    <!-- Navigation Bar -->
-    <nav class="dashboard-nav">
-        <div class="dashboard-nav-left">
-            <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="dashboard-nav-logo">
-            <h1>CHECKLIST MODULE</h1>
+<body style="align-items: flex-start; background-color: #f8fafc; display: block;">
+    <!-- Main Header -->
+    <nav class="checklist-nav">
+        <div class="checklist-nav-left">
+            <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="checklist-nav-logo">
+            <h1>CHECKLIST</h1>
         </div>
         
-        <div style="display: flex; gap: 1rem;">
-            <a href="{{ route('dashboard') }}" class="btn-back" style="text-decoration: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                Back to Dashboard
-            </a>
-        </div>
+        <a href="{{ route('dashboard') }}" class="btn-back" style="text-decoration: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Back to Dashboard
+        </a>
     </nav>
 
+    <!-- Sub Navbar -->
+    <div class="sub-navbar">
+        <span>Basic Information</span>
+    </div>
+
     <!-- Main Content -->
-    <main class="dashboard-content">
-        <div class="card" style="width: 100%; max-width: 800px; padding: 2rem;">
-            <h2 style="color: var(--primary-color); margin-bottom: 1rem;">Checklist Form Configuration</h2>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Build your specific checklist features here. Submitting forms from this page will update the department values on the dashboard later.</p>
-            
-            <div style="padding: 3rem; border: 2px dashed rgba(0,0,0,0.1); border-radius: 12px; text-align: center;">
-                <span style="color: var(--text-muted);">Checklist Form Placeholder</span>
+    <main class="checklist-content">
+        <div class="card" style="width: 100%; padding: 2.5rem; max-width: 100%;">
+            <div class="input-group">
+                <label for="id_no">ID NO</label>
+                <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number">
             </div>
         </div>
     </main>
