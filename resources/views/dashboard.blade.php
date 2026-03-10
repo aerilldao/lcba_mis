@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCBA - Dashboard</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <style>
@@ -81,8 +82,11 @@
             
             <!-- Quick Notes -->
             <div class="card dashboard-main-area" style="width: 100%; padding: 2rem; flex: 1; display: flex; flex-direction: column;">
-                <h2 style="color: var(--primary-color); margin-bottom: 1rem;">Quick Notes</h2>
-                <textarea style="flex: 1; min-height: 150px; width: 100%; border: none; resize: none; outline: none; background: transparent; font-family: inherit; font-size: 1.05rem; color: var(--text-main); line-height: 1.6;" placeholder="Type your notes here..."></textarea>
+                <h2 style="color: var(--primary-color); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    Quick Notes
+                    <span id="save-indicator" style="font-size: 0.75rem; font-weight: 400; color: var(--text-muted); opacity: 0; transition: opacity 0.3s;">Saving...</span>
+                </h2>
+                <textarea id="quick-notes" style="flex: 1; min-height: 150px; width: 100%; border: none; resize: none; outline: none; background: transparent; font-family: inherit; font-size: 1.05rem; color: var(--text-main); line-height: 1.6; position: relative; z-index: 1;" placeholder="Type your notes here...">{{ auth()->user()->quick_notes }}</textarea>
             </div>
 
             <!-- Bottom Row: Functions & Detailed Stats -->
@@ -159,5 +163,45 @@
         </div>
 
     </main>
+    <script>
+        const notesArea = document.getElementById('quick-notes');
+        let timeout = null;
+
+        notesArea.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                saveNotes();
+            }, 1000); // Save after 1 second of inactivity
+        });
+
+        function saveNotes() {
+            const notes = notesArea.value;
+            const indicator = document.getElementById('save-indicator');
+            
+            indicator.textContent = 'Saving...';
+            indicator.style.opacity = '1';
+
+            fetch('{{ route("dashboard.notes") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ notes: notes })
+            })
+            .then(response => response.json())
+            .then(data => {
+                indicator.textContent = 'Saved';
+                setTimeout(() => {
+                    indicator.style.opacity = '0';
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error saving notes:', error);
+                indicator.textContent = 'Error';
+                indicator.style.color = '#ef4444';
+            });
+        }
+    </script>
 </body>
 </html>
