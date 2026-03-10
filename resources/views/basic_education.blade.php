@@ -76,10 +76,9 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 1.5rem 2rem;
+            padding: 2rem;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            transition: opacity 0.35s ease;
         }
 
         .section-title {
@@ -88,7 +87,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid rgba(30, 58, 138, 0.1);
         }
@@ -96,85 +95,132 @@
         .field-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            align-items: flex-end;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: flex-start;
         }
 
         .field {
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
-            flex: 1 1 180px;
+            gap: 0.5rem;
+            flex: 1;
         }
 
-        .field.narrow  { flex: 0 1 140px; }
-        .field.medium  { flex: 1 1 200px; }
-        .field.wide    { flex: 1 1 260px; }
-        .field.xwide   { flex: 2 1 300px; }
-
         .field label {
-            font-weight: 600;
-            font-size: 0.78rem;
-            color: var(--text-muted);
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: var(--primary-color);
             text-transform: uppercase;
             letter-spacing: 0.06em;
         }
 
-        .field input,
+        .field input[type="text"],
+        .field input[type="number"],
         .field select {
             width: 100%;
-            padding: 0.65rem 1rem;
+            padding: 0.8rem 1.2rem;
             border: 1px solid rgba(0,0,0,0.1);
             border-radius: 10px;
             outline: none;
             font-family: inherit;
-            font-size: 0.95rem;
-            color: var(--text-main);
+            font-size: 1rem;
             background: #ffffff;
-            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+            appearance: none;
         }
 
-        .field input:focus,
-        .field select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        .field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em;
         }
 
-        .field input:disabled,
-        .field select:disabled {
-            background: #f1f5f9;
-            color: #94a3b8;
-            cursor: not-allowed;
-            border-color: rgba(0,0,0,0.06);
+        .checkbox-group {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
 
-        .section-locked {
-            opacity: 0.4;
-            pointer-events: none;
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
         }
 
-        .section-unlocked {
-            opacity: 1;
-            pointer-events: auto;
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item span {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            text-transform: uppercase;
         }
 
 
 
-        @media (max-width: 768px) {
-            .field-row { flex-direction: column; }
-            .field, .field.narrow, .field.medium, .field.wide, .field.xwide {
-                flex: 1 1 100%;
+        .section-label {
+            min-width: 200px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            padding-top: 0.5rem;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 1200px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
             }
+        }
+
+        .credentials-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .credentials-item:last-child {
+            border-bottom: none;
+        }
+
+        .credentials-item span {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .credentials-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
     </style>
 </head>
-<body style="align-items: flex-start; background-color: #f8fafc; display: block; overflow-y: auto; overflow-x: hidden;">
+<body style="background-color: #f8fafc; display: block; overflow-y: auto;">
 
     <!-- Main Header -->
     <nav class="checklist-nav">
         <div class="checklist-nav-left">
             <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="checklist-nav-logo">
-            <h1>BASIC EDUCATION</h1>
+            <h1>CHECKLIST</h1>
         </div>
         <a href="{{ route('checklist') }}" class="btn-back" style="text-decoration: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -184,92 +230,147 @@
 
     <!-- Sub Navbar -->
     <div class="sub-navbar">
-        <span>Basic Education — Student Records</span>
+        <span>Basic Education</span>
     </div>
 
     <!-- Main Content -->
     <main class="checklist-content">
+        
+        <div class="layout-grid">
+            <div class="section-card">
+                <div class="section-title">Educational Background & Enrollment Details</div>
 
-        <!-- Student Information -->
-        <div class="section-card" id="section-student">
-            <div class="section-title">Student Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="student_last_name" placeholder="Last Name">
+                <!-- Checkboxes Row -->
+                <div class="field-row">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="balik_aral">
+                            <span>TICK IF BALIK ARAL</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="senior_high">
+                            <span>TICK IF SENIOR HIGH</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="freshman">
+                            <span>FRESHMAN</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="transferee">
+                            <span>TRANSFEREE</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="student_first_name" placeholder="First Name">
+
+                <!-- Grade Level / LRN / ECS Row -->
+                <div class="field-row">
+                    <div class="field">
+                        <label>GRADE LEVEL</label>
+                        <input type="text" name="grade_level" placeholder="Enter Grade Level">
+                    </div>
+                    <div class="field">
+                        <label>LRN(ONLY IF APPLICABLE)</label>
+                        <input type="text" name="lrn" placeholder="Enter LRN">
+                    </div>
+                    <div class="field">
+                        <label>ECS(ONLY IF APPLICABLE)</label>
+                        <input type="text" name="ecs" placeholder="Enter ECS">
+                    </div>
                 </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="student_middle_name" placeholder="Middle Name">
+
+                <!-- Strand Row -->
+                <div class="field-row">
+                    <div class="field">
+                        <label>STRAND</label>
+                        <input type="text" name="strand" placeholder="Enter Strand">
+                    </div>
                 </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
+
+                <!-- Semester Row -->
+                <div class="field-row">
+                    <div class="field" style="max-width: 400px;">
+                        <label>SEMESTER</label>
+                        <select name="semester">
+                            <option value="" disabled selected>Select Semester</option>
+                            <option value="1st">1ST SEMESTER</option>
+                            <option value="2nd">2ND SEMESTER</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="field medium">
-                    <label>Birthdate</label>
-                    <input type="date" name="student_birthdate">
+
+                <!-- School Last Attended Row -->
+                <div class="field-row">
+                    <div class="field">
+                        <label>SCHOOL LAST ATTENDED</label>
+                        <div style="display: flex; gap: 1.5rem; width: 100%; margin-top: 1rem;">
+                            <div class="field">
+                                <label>SCHOOL NAME</label>
+                                <input type="text" name="school_name" placeholder="Enter School Name">
+                            </div>
+                            <div class="field">
+                                <label>LAST SCHOOL YEAR</label>
+                                <input type="text" name="last_school_year" placeholder="e.g. 2023-2024">
+                            </div>
+                            <div class="field">
+                                <label>LAST GRADE LEVEL</label>
+                                <input type="text" name="last_grade_level" placeholder="Enter Last Grade Level">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="field narrow">
-                    <label>Sex</label>
-                    <select name="student_sex">
-                        <option value="" disabled selected>Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
+
+                <!-- School ID Row -->
+                <div class="field-row">
+                    <div class="field" style="max-width: calc(25% - 1.5rem);">
+                        <label>SCHOOL ID</label>
+                        <input type="text" name="school_id" placeholder="Enter School ID">
+                    </div>
+                    <!-- Empty space for the rest of the row -->
+                    <div style="flex: 3;"></div>
                 </div>
-                <div class="field narrow">
-                    <label>Age</label>
-                    <input type="number" name="student_age" placeholder="Age">
+
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                    <button type="reset" class="btn-back" style="background: rgba(0,0,0,0.05); padding: 0.8rem 2rem;">Clear All</button>
+                    <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Submit</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Grade Level -->
-        <div class="section-card" id="section-grade">
-            <div class="section-title">Grade Level & School Year</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Grade Level</label>
-                    <select name="grade_level">
-                        <option value="" disabled selected>Select Grade</option>
-                        <option>Kindergarten</option>
-                        <option>Grade 1</option>
-                        <option>Grade 2</option>
-                        <option>Grade 3</option>
-                        <option>Grade 4</option>
-                        <option>Grade 5</option>
-                        <option>Grade 6</option>
-                        <option>Grade 7</option>
-                        <option>Grade 8</option>
-                        <option>Grade 9</option>
-                        <option>Grade 10</option>
-                        <option>Grade 11</option>
-                        <option>Grade 12</option>
-                    </select>
-                </div>
-                <div class="field medium">
-                    <label>School Year</label>
-                    <input type="text" name="school_year" placeholder="e.g. 2024–2025">
-                </div>
-                <div class="field narrow">
-                    <label>Section</label>
-                    <input type="text" name="section" placeholder="Section">
+            <div class="section-card">
+                <div class="section-title">CREDENTIALS CHECK</div>
+                <div class="credentials-list">
+                    <div class="credentials-item">
+                        <span>FORM 138</span>
+                        <input type="checkbox" name="credential_138">
+                    </div>
+                    <div class="credentials-item">
+                        <span>FORM 137-A</span>
+                        <input type="checkbox" name="credential_137a">
+                    </div>
+                    <div class="credentials-item">
+                        <span>GOOD MORALE</span>
+                        <input type="checkbox" name="credential_moral">
+                    </div>
+                    <div class="credentials-item">
+                        <span>PICTURES</span>
+                        <input type="checkbox" name="credential_pics">
+                    </div>
+                    <div class="credentials-item">
+                        <span>PSA (PHOTOCOPY)</span>
+                        <input type="checkbox" name="credential_psa">
+                    </div>
+                    <div class="credentials-item">
+                        <span>TRANSFER CREDENTIALS</span>
+                        <input type="checkbox" name="credential_transfer">
+                    </div>
+                    <div class="credentials-item">
+                        <span>TRANSCRIPT OF RECORDS</span>
+                        <input type="checkbox" name="credential_tor">
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Actions -->
-        <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
-            <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
         </div>
 
     </main>
-
 
 
 </body>
