@@ -1,4 +1,5 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img width="220" height="220" alt="LCBA LOGO VECTOR" src="https://github.com/user-attachments/assets/de007c36-249f-4b5f-88e1-0956fa9b81ef" width="400" alt="Laravel Logo"></a></p>
+
 
 
 # LCBA Administrative Dashboard
