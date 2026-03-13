@@ -25,3 +25,11 @@ Route::get('/basic-education', function () {
 Route::get('/collegiate', function () {
     return view('collegiate');
 })->middleware('auth')->name('collegiate');
+
+Route::get('/basic-education-records', function () {
+    return view('basic_education_records');
+})->middleware('auth')->name('basic_education_records');
+
+Route::get('/collegiate-records', function () {
+    return view('collegiate_records');
+})->middleware('auth')->name('collegiate_records');

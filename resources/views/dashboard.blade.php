@@ -92,19 +92,78 @@
             <!-- Bottom Row: Functions & Detailed Stats -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                 
+                <style>
+                    .stat-inner-card {
+                        background: #ffffff;
+                        border: 1px solid rgba(0, 0, 0, 0.08); /* More distinct border */
+                        border-radius: 16px;
+                        padding: 1.5rem 1rem;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.25rem;
+                        transition: all 0.3s ease;
+                        position: relative;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                    }
+                    .stat-inner-card:hover {
+                        box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+                        border-color: rgba(0,0,0,0.12);
+                    }
+                    .btn-view-records {
+                        margin-top: 0.75rem;
+                        padding: 0.6rem 1.4rem;
+                        font-size: 0.75rem;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 0.08em;
+                        text-decoration: none;
+                        border-radius: 10px;
+                        transition: all 0.2s ease;
+                        position: relative;
+                        z-index: 20; /* Ensure it's above everything */
+                        display: inline-block;
+                    }
+                    .btn-view-records.basic {
+                        color: var(--primary-color);
+                        background: rgba(30, 58, 138, 0.06);
+                        border: 1px solid rgba(30, 58, 138, 0.1);
+                    }
+                    .btn-view-records.basic:hover {
+                        background: var(--primary-color);
+                        color: #ffffff;
+                        transform: scale(1.05);
+                        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+                    }
+                    .btn-view-records.collegiate {
+                        color: var(--accent-color);
+                        background: rgba(245, 158, 11, 0.06);
+                        border: 1px solid rgba(245, 158, 11, 0.1);
+                    }
+                    .btn-view-records.collegiate:hover {
+                        background: var(--accent-color);
+                        color: #ffffff;
+                        transform: scale(1.05);
+                        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+                    }
+                </style>
+                
                 <!-- Functions & General Stats -->
-                <div class="card" style="width: 100%; padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
-                    <a href="{{ route('checklist') }}" class="btn-login" style="text-align: center; text-decoration: none; display: block; width: 100%; position: relative; z-index: 10;">Open Checklist</a>
+                <div class="card" style="width: 100%; padding: 2.5rem; display: flex; flex-direction: column; gap: 2rem; position: relative; z-index: 5;">
+                    <a href="{{ route('checklist') }}" class="btn-login" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 100%; height: 62px; font-size: 1.1rem; border-radius: 14px; position: relative; z-index: 10; font-weight: 700;">Open Checklist</a>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div style="background: rgba(59, 130, 246, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.1); text-align: center;">
-                            <h4 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Basic Education</h4>
-                            <span style="font-size: 2.2rem; font-weight: 800; color: var(--primary-color);">0</span>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                        <div class="stat-inner-card">
+                            <h4 style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; margin-bottom: 0.25rem;">Basic Education</h4>
+                            <span style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1;">0</span>
+                            <a href="{{ route('basic_education_records') }}" class="btn-view-records basic">View Records</a>
                         </div>
-                        
-                        <div style="background: rgba(245, 158, 11, 0.05); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.1); text-align: center;">
-                            <h4 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">College & Graduate</h4>
-                            <span style="font-size: 2.2rem; font-weight: 800; color: var(--accent-color);">0</span>
+
+                        <div class="stat-inner-card">
+                            <h4 style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; margin-bottom: 0.25rem;">College &amp; Graduate</h4>
+                            <span style="font-size: 2.5rem; font-weight: 800; color: var(--accent-color); line-height: 1;">0</span>
+                            <a href="{{ route('collegiate_records') }}" class="btn-view-records collegiate">View Records</a>
                         </div>
                     </div>
                 </div>
