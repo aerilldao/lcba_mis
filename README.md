@@ -29,7 +29,7 @@ The dashboard provides a structured interface for handling student records, help
 - **Backend : Laravel**
 - **Frontend : Blade/HTML/CSS/JavaScript/Tailwind**
 - **Database : MySQL**
-- **Framework : **
+- **Framework :**
 
 ## License
 
