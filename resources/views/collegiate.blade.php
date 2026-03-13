@@ -6,6 +6,7 @@
     <title>LCBA - Collegiate &amp; Graduate Studies</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/dark-mode.js') }}"></script>
     <style>
         .checklist-nav {
             display: flex;
@@ -13,12 +14,13 @@
             align-items: center;
             width: 100%;
             padding: 1rem 2rem;
-            background: #ffffff;
+            background: var(--header-bg);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
             left: 0;
             z-index: 50;
+            transition: background-color 0.3s ease;
         }
 
         .checklist-nav-left {
@@ -124,13 +126,13 @@
         .field select {
             width: 100%;
             padding: 0.65rem 1rem;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid var(--card-border);
             border-radius: 10px;
             outline: none;
             font-family: inherit;
             font-size: 0.95rem;
             color: var(--text-main);
-            background: #ffffff;
+            background: var(--input-bg);
             transition: border-color 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
         }
 
@@ -168,7 +170,7 @@
         }
     </style>
 </head>
-<body style="align-items: flex-start; background-color: #f8fafc; display: block; overflow-y: auto; overflow-x: hidden;">
+<body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
 
     <!-- Main Header -->
     <nav class="checklist-nav">
@@ -176,10 +178,17 @@
             <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="checklist-nav-logo">
             <h1>COLLEGIATE &amp; GRADUATE STUDIES</h1>
         </div>
-        <a href="{{ route('checklist') }}" class="btn-back" style="text-decoration: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-            Back to Checklist
-        </a>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <a href="{{ route('checklist') }}" class="btn-back" style="text-decoration: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Back to Checklist
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="btn-login" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Log Out</button>
+            </form>
+        </div>
     </nav>
 
     <!-- Sub Navbar -->
