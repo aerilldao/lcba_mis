@@ -169,11 +169,11 @@
                 </div>
 
                 <!-- Detailed Counters -->
-                <div class="card" style="width: 100%; padding: 2rem; display: flex; flex-direction: column; gap: 1rem;">
-                    <h3 style="color: var(--primary-color); font-size: 1.15rem; margin-bottom: 0.5rem;"> Detailed Enrollment breakdown</h3>
+                <div class="card" style="width: 100%; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; text-align: center;">
+                    <h3 style="color: var(--primary-color); font-size: 1.15rem; margin-bottom: 0.5rem;">Enrollment Breakdown</h3>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1;">
-                        <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; width: 100%;">
+                        <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column; align-items: center;">
                             <span style="display: block; font-size: 1.75rem; font-weight: 700; color: #10b981;">0</span>
                             <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Kinder to Elem.</span>
                             <div style="width: 100%; height: 6px; background: rgba(16, 185, 129, 0.1); border-radius: 4px; overflow: hidden;">
@@ -181,7 +181,7 @@
                             </div>
                         </div>
                         
-                        <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column;">
+                        <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column; align-items: center;">
                             <span style="display: block; font-size: 1.75rem; font-weight: 700; color: #3b82f6;">0</span>
                             <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Junior High</span>
                             <div style="width: 100%; height: 6px; background: rgba(59, 130, 246, 0.1); border-radius: 4px; overflow: hidden;">
@@ -189,18 +189,26 @@
                             </div>
                         </div>
                         
-                        <div style="text-align: center; padding-top: 0.5rem; display: flex; flex-direction: column;">
+                        <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column; align-items: center;">
                             <span style="display: block; font-size: 1.75rem; font-weight: 700; color: #8b5cf6;">0</span>
                             <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Senior High</span>
-                            <div style="width: 100%; height: 6px; background: rgba(139, 92, 246, 0.1); border-radius: 4px; overflow: hidden; margin-top: auto;">
+                            <div style="width: 100%; height: 6px; background: rgba(139, 92, 246, 0.1); border-radius: 4px; overflow: hidden;">
                                 <div style="width: 0%; height: 100%; background: #8b5cf6; border-radius: 4px; transition: width 1s ease;"></div>
                             </div>
                         </div>
+
+                        <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column; align-items: center;">
+                            <span style="display: block; font-size: 1.75rem; font-weight: 700; color: #0ea5e9;">0</span>
+                            <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">College</span>
+                            <div style="width: 100%; height: 6px; background: rgba(14, 165, 233, 0.1); border-radius: 4px; overflow: hidden;">
+                                <div style="width: 0%; height: 100%; background: #0ea5e9; border-radius: 4px; transition: width 1s ease;"></div>
+                            </div>
+                        </div>
                         
-                        <div style="text-align: center; padding-top: 0.5rem; display: flex; flex-direction: column;">
+                        <div style="text-align: center; padding-top: 0.5rem; display: flex; flex-direction: column; align-items: center; grid-column: span 2;">
                             <span style="display: block; font-size: 1.75rem; font-weight: 700; color: #f59e0b;">0</span>
                             <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Graduate Studies</span>
-                            <div style="width: 100%; height: 6px; background: rgba(245, 158, 11, 0.1); border-radius: 4px; overflow: hidden; margin-top: auto;">
+                            <div style="width: 100%; height: 6px; background: rgba(245, 158, 11, 0.1); border-radius: 4px; overflow: hidden; margin-top: 0.5rem;">
                                 <div style="width: 0%; height: 100%; background: #f59e0b; border-radius: 4px; transition: width 1s ease;"></div>
                             </div>
                         </div>
