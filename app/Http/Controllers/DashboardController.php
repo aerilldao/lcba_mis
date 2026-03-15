@@ -33,12 +33,54 @@ class DashboardController extends Controller
             'year' => 'required|integer|min:2000|max:2100',
         ]);
 
+        // Local Events
         $events = CalendarEvent::where('user_id', Auth::id())
             ->whereMonth('event_date', $request->month)
             ->whereYear('event_date', $request->year)
             ->orderBy('event_date')
             ->orderBy('event_time')
-            ->get();
+            ->get()
+            ->map(function($ev) {
+                $ev->source = 'local';
+                return $ev;
+            });
+
+        // Google Calendar Integration
+        $googleId = env('GOOGLE_CALENDAR_ID');
+        $googleKey = env('GOOGLE_API_KEY');
+
+        if ($googleId && $googleKey) {
+            try {
+                $startOfMonth = sprintf('%04d-%02d-01T00:00:00Z', $request->year, $request->month);
+                $endOfMonth = sprintf('%04d-%02d-%02dT23:59:59Z', $request->year, $request->month, cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year));
+                
+                $url = "https://www.googleapis.com/content/v3/calendars/" . urlencode($googleId) . "/events?key=" . $googleKey . "&timeMin=" . $startOfMonth . "&timeMax=" . $endOfMonth . "&singleEvents=true";
+                
+                $response = file_get_contents($url);
+                if ($response) {
+                    $googleData = json_decode($response, true);
+                    if (isset($googleData['items'])) {
+                        foreach ($googleData['items'] as $item) {
+                            $date = isset($item['start']['date']) ? $item['start']['date'] : substr($item['start']['dateTime'], 0, 10);
+                            $time = isset($item['start']['dateTime']) ? substr($item['start']['dateTime'], 11, 5) : null;
+                            
+                            $events->push((object)[
+                                'id' => 'google_' . $item['id'],
+                                'title' => $item['summary'] ?? '(No Title)',
+                                'description' => $item['description'] ?? null,
+                                'event_date' => $date,
+                                'event_time' => $time,
+                                'color' => '#4285F4', // Google Blue
+                                'source' => 'google',
+                                'htmlLink' => $item['htmlLink'] ?? null
+                            ]);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // Silently fail or log if Google fetch fails
+            }
+        }
 
         return response()->json($events);
     }

@@ -6,6 +6,8 @@
     <title>LCBA - Selection Portal</title>
     <meta name="description" content="Welcome to the Laguna College of Business & Arts Portal. Select Guidance or Registrar to continue.">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <script src="{{ asset('js/dark-mode.js') }}"></script>
 </head>
@@ -64,8 +66,8 @@
     <!-- Login Modal section -->
     <div class="login-modal-overlay" id="login-modal">
         <div class="login-card">
-            <h2>Registrar Login</h2>
-            <p>Please enter your credentials to safely access the module.</p>
+            <h2 id="login-title">Registrar Login</h2>
+            <p id="login-subtitle">Please enter your credentials to safely access the module.</p>
             <form id="registrar-login-form" method="POST" action="{{ route('login') }}">
                 @csrf
                 @if ($errors->any())
@@ -95,11 +97,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const registrarCard = document.getElementById('card-registrar');
+            const guidanceCard = document.getElementById('card-guidance');
             const loginModal = document.getElementById('login-modal');
+            const loginTitle = document.getElementById('login-title');
+            const loginSubtitle = document.getElementById('login-subtitle');
             const btnBack = document.getElementById('btn-back');
 
             registrarCard.addEventListener('click', (e) => {
                 e.preventDefault();
+                loginTitle.textContent = 'Registrar Login';
+                loginSubtitle.textContent = 'Please enter your credentials to safely access the module.';
+                loginModal.classList.add('visible');
+            });
+
+            guidanceCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginTitle.textContent = 'Guidance Login';
+                loginSubtitle.textContent = 'Guidance module login is currently being integrated from an external project.';
                 loginModal.classList.add('visible');
             });
 

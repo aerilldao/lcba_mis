@@ -6,6 +6,8 @@
     <title>LCBA - Dashboard</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <script src="{{ asset('js/dark-mode.js') }}"></script>
     <style>
@@ -1337,20 +1339,27 @@
             if (events.length === 0) {
                 dayPopupEvents.innerHTML = '<div class="cal-no-events">No events on this day</div>';
             } else {
-                dayPopupEvents.innerHTML = events.map(ev => `
-                    <div class="cal-event-item">
-                        <div class="cal-event-item-header">
-                            <div class="cal-event-item-dot" style="background: ${ev.color || '#3b82f6'}"></div>
-                            <span class="cal-event-item-title">${escHtml(ev.title)}</span>
-                            ${ev.event_time ? `<span class="cal-event-item-time">${formatTime(ev.event_time)}</span>` : ''}
+                dayPopupEvents.innerHTML = events.map(ev => {
+                    const isGoogle = ev.source === 'google';
+                    return `
+                        <div class="cal-event-item">
+                            <div class="cal-event-item-header">
+                                <div class="cal-event-item-dot" style="background: ${ev.color || '#3b82f6'}"></div>
+                                <span class="cal-event-item-title">${escHtml(ev.title)}</span>
+                                ${ev.event_time ? `<span class="cal-event-item-time">${formatTime(ev.event_time)}</span>` : ''}
+                            </div>
+                            ${ev.description ? `<div class="cal-event-item-desc">${escHtml(ev.description)}</div>` : ''}
+                            <div class="cal-event-item-actions">
+                                ${isGoogle ? `
+                                    <a href="${ev.htmlLink}" target="_blank" class="cal-event-action-btn" style="text-decoration: none; background: #4285F4; color: white;">View in Google Calendar</a>
+                                ` : `
+                                    <button class="cal-event-action-btn cal-event-edit-btn" data-id="${ev.id}">Edit</button>
+                                    <button class="cal-event-action-btn cal-event-delete-btn" data-id="${ev.id}">Delete</button>
+                                `}
+                            </div>
                         </div>
-                        ${ev.description ? `<div class="cal-event-item-desc">${escHtml(ev.description)}</div>` : ''}
-                        <div class="cal-event-item-actions">
-                            <button class="cal-event-action-btn cal-event-edit-btn" data-id="${ev.id}">Edit</button>
-                            <button class="cal-event-action-btn cal-event-delete-btn" data-id="${ev.id}">Delete</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
 
             dayPopup.classList.add('active');
@@ -1377,7 +1386,7 @@
             const deleteBtn = e.target.closest('.cal-event-delete-btn');
 
             if (editBtn) {
-                const evId = parseInt(editBtn.dataset.id);
+                const evId = editBtn.dataset.id;
                 const ev = findEventById(evId);
                 if (ev) {
                     closeDayPopup();
@@ -1386,14 +1395,15 @@
             }
 
             if (deleteBtn) {
-                deletingEventId = parseInt(deleteBtn.dataset.id);
+                deletingEventId = deleteBtn.dataset.id;
                 confirmOverlay.classList.add('active');
             }
         });
 
         function findEventById(id) {
+            const idStr = String(id);
             for (const key in eventsCache) {
-                const found = eventsCache[key].find(e => e.id === id);
+                const found = eventsCache[key].find(e => String(e.id) === idStr);
                 if (found) return found;
             }
             return null;
