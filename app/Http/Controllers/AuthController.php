@@ -16,6 +16,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            $user = Auth::user();
+            $user->update([
+                'last_login_at' => now(),
+            ]);
+            
+            if ($user->email === 'SUPERUSER') {
+                return redirect()->intended('superuser');
+            }
+            
             return redirect()->intended('dashboard');
         }
 
