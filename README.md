@@ -30,7 +30,11 @@ The dashboard provides a structured interface for handling student records, help
 - **Frontend : Blade/HTML/CSS/JavaScript/Tailwind**
 - **Database : MySQL**
 - **Framework :**
-
+## Database Migration (FOR TESTERS)
+1. **Prepare the Target Machine**
+   [bash]
+       composer install
+       npm install
 ## License
 
 Developed and Designed by the LCBA SMIS
