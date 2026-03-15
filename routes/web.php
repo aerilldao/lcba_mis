@@ -13,6 +13,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::post('/dashboard/notes', [DashboardController::class, 'updateNotes'])->middleware('auth')->name('dashboard.notes');
+Route::get('/dashboard/events', [DashboardController::class, 'getEvents'])->middleware('auth')->name('dashboard.events');
+Route::post('/dashboard/events', [DashboardController::class, 'storeEvent'])->middleware('auth')->name('dashboard.events.store');
+Route::put('/dashboard/events/{event}', [DashboardController::class, 'updateEvent'])->middleware('auth')->name('dashboard.events.update');
+Route::delete('/dashboard/events/{event}', [DashboardController::class, 'deleteEvent'])->middleware('auth')->name('dashboard.events.delete');
 
 Route::get('/checklist', function () {
     return view('checklist');
