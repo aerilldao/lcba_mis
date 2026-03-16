@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'name' => 'Super User',
-            'email' => 'EMAIL',
-            'password' => \Illuminate\Support\Facades\Hash::make('PASS'),
+            'email' => 'SUPERUSER',
+            'password' => \Illuminate\Support\Facades\Hash::make('adminLCBA'),
         ]);
     }
 }
