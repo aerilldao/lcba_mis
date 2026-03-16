@@ -214,6 +214,47 @@
             margin-bottom: 1.25rem;
             opacity: 0.8;
         }
+
+        /* Custom Datepicker Dropdown */
+        .datepicker-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%; /* Or could change min-width: 250px depending on layout */
+            min-width: 280px;
+            margin-top: 10px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            z-index: 1050;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .datepicker-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .dp-month { font-weight: 800; font-size: 0.85rem; color: #fff; text-transform: uppercase; }
+        .dp-nav { display: flex; gap: 0.5rem; }
+        .dp-nav-btn { background: rgba(255,255,255,0.05); border: none; color: #fff; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+        .dp-nav-btn:hover { background: var(--primary-color); }
+        .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .dp-weekday { text-align: center; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); padding: 5px 0; }
+        .dp-day { 
+            text-align: center; padding: 8px 0; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s;
+        }
+        .dp-day:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .dp-day.current { color: #fff; }
+        .dp-day.selected { background: var(--primary-color); color: #fff; }
+        .dp-day.today { color: var(--primary-color); position: relative; }
+        .dp-day.today::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--primary-color); }
     </style>
 </head>
 <body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
@@ -281,9 +322,28 @@
                         <label>Suffix</label>
                         <input type="text" name="student_suffix" placeholder="Jr., III, etc." disabled>
                     </div>
-                    <div class="field medium">
+                    <div class="field medium" style="position: relative;">
                         <label>Birthdate</label>
-                        <input type="date" name="student_birthdate" disabled>
+                        <input type="text" id="checklist-input-date" name="student_birthdate" placeholder="YYYY-MM-DD" readonly disabled style="cursor: pointer;">
+                        <div class="datepicker-dropdown" id="checklist-datepicker">
+                            <div class="dp-header">
+                                <div class="dp-month" id="dp-month-label">March 2026</div>
+                                <div class="dp-nav">
+                                    <button type="button" class="dp-nav-btn" id="dp-prev">←</button>
+                                    <button type="button" class="dp-nav-btn" id="dp-next">→</button>
+                                </div>
+                            </div>
+                            <div class="dp-grid">
+                                <div class="dp-weekday">Su</div>
+                                <div class="dp-weekday">Mo</div>
+                                <div class="dp-weekday">Tu</div>
+                                <div class="dp-weekday">We</div>
+                                <div class="dp-weekday">Th</div>
+                                <div class="dp-weekday">Fr</div>
+                                <div class="dp-weekday">Sa</div>
+                            </div>
+                            <div class="dp-grid" id="dp-days"></div>
+                        </div>
                     </div>
                     <div class="field narrow">
                         <label>Sex</label>
@@ -448,6 +508,91 @@
 
         idInput.addEventListener('input', function() {
             toggleSections(this.value.trim().length > 0);
+        });
+
+        // Datepicker Logic
+        const dpMONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+        function dateKey(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
+
+        let dpMonth = new Date().getMonth();
+        let dpYear = new Date().getFullYear();
+        const dpInput = document.getElementById('checklist-input-date');
+        const dpDropdown = document.getElementById('checklist-datepicker');
+        const dpMonthLabel = document.getElementById('dp-month-label');
+        const dpDaysGrid = document.getElementById('dp-days');
+        const dpPrev = document.getElementById('dp-prev');
+        const dpNext = document.getElementById('dp-next');
+
+        dpInput.addEventListener('click', (e) => {
+            if (dpInput.disabled) return;
+            e.stopPropagation();
+            dpDropdown.classList.toggle('active');
+            if (dpDropdown.classList.contains('active')) {
+                if (dpInput.value && dpInput.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    const d = new Date(dpInput.value + 'T00:00:00');
+                    if (!isNaN(d)) {
+                        dpMonth = d.getMonth();
+                        dpYear = d.getFullYear();
+                    }
+                } else {
+                    dpMonth = new Date().getMonth();
+                    dpYear = new Date().getFullYear();
+                }
+                renderDP();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dpDropdown.contains(e.target) && e.target !== dpInput) {
+                dpDropdown.classList.remove('active');
+            }
+        });
+
+        function renderDP() {
+            dpMonthLabel.textContent = `${dpMONTHS[dpMonth]} ${dpYear}`;
+            dpDaysGrid.innerHTML = '';
+
+            const firstDay = new Date(dpYear, dpMonth, 1).getDay();
+            const daysInMonth = new Date(dpYear, dpMonth + 1, 0).getDate();
+            const today = new Date();
+            const selectedStr = dpInput.value;
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                dpDaysGrid.appendChild(empty);
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'dp-day current';
+                dayEl.textContent = d;
+
+                const dayKeyStr = dateKey(dpYear, dpMonth, d);
+                if (dayKeyStr === selectedStr) dayEl.classList.add('selected');
+                if (dayKeyStr === dateKey(today.getFullYear(), today.getMonth(), today.getDate())) dayEl.classList.add('today');
+
+                dayEl.addEventListener('click', () => {
+                    dpInput.value = dayKeyStr;
+                    dpDropdown.classList.remove('active');
+                });
+
+                dpDaysGrid.appendChild(dayEl);
+            }
+        }
+
+        dpPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dpMonth--;
+            if (dpMonth < 0) { dpMonth = 11; dpYear--; }
+            renderDP();
+        });
+
+        dpNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dpMonth++;
+            if (dpMonth > 11) { dpMonth = 0; dpYear++; }
+            renderDP();
         });
     </script>
 
