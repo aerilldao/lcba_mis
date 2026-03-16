@@ -197,6 +197,23 @@
                 flex: 1 1 100%;
             }
         }
+
+        .sub-section {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(30, 58, 138, 0.1);
+        }
+        .sub-section:last-child {
+            border-bottom: none;
+        }
+        .section-subtitle {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.25rem;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
@@ -228,161 +245,166 @@
     <!-- Main Content -->
     <main class="checklist-content">
 
-        <!-- ID Number Section -->
+        <!-- BASIC INFORMATION Wrapper -->
         <div class="section-card">
-            <div class="section-title">Student ID Lookup</div>
-            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-                <div>
-                    <label for="id_no" style="display: block; font-weight: 600; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem;">ID No.</label>
-                    <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number" autocomplete="off">
+            <div class="section-title">BASIC INFORMATION</div>
+
+            <!-- ID Number Section -->
+            <div class="sub-section">
+                <div class="section-subtitle">Student ID Lookup</div>
+                <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <div>
+                        <label for="id_no" style="display: block; font-weight: 600; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem;">ID No.</label>
+                        <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number" autocomplete="off">
+                    </div>
+                </div>
+                <p class="id-hint" id="id-hint">Enter an ID number to unlock the form fields below.</p>
+            </div>
+
+            <!-- Student Information -->
+            <div class="sub-section section-locked" id="section-student">
+                <div class="section-subtitle">Student Information</div>
+                <div class="field-row">
+                    <div class="field wide">
+                        <label>Last Name</label>
+                        <input type="text" name="student_last_name" placeholder="Last Name" disabled>
+                    </div>
+                    <div class="field wide">
+                        <label>First Name</label>
+                        <input type="text" name="student_first_name" placeholder="First Name" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Middle Name</label>
+                        <input type="text" name="student_middle_name" placeholder="Middle Name" disabled>
+                    </div>
+                    <div class="field narrow">
+                        <label>Suffix</label>
+                        <input type="text" name="student_suffix" placeholder="Jr., III, etc." disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Birthdate</label>
+                        <input type="date" name="student_birthdate" disabled>
+                    </div>
+                    <div class="field narrow">
+                        <label>Sex</label>
+                        <select name="student_sex" disabled>
+                            <option value="" disabled selected>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="field narrow">
+                        <label>Age</label>
+                        <input type="number" name="student_age" placeholder="Age" disabled>
+                    </div>
                 </div>
             </div>
-            <p class="id-hint" id="id-hint">Enter an ID number to unlock the form fields below.</p>
-        </div>
 
-        <!-- Student Information -->
-        <div class="section-card section-locked" id="section-student">
-            <div class="section-title">Student Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="student_last_name" placeholder="Last Name" disabled>
-                </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="student_first_name" placeholder="First Name" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="student_middle_name" placeholder="Middle Name" disabled>
-                </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="student_suffix" placeholder="Jr., III, etc." disabled>
-                </div>
-                <div class="field medium">
-                    <label>Birthdate</label>
-                    <input type="date" name="student_birthdate" disabled>
-                </div>
-                <div class="field narrow">
-                    <label>Sex</label>
-                    <select name="student_sex" disabled>
-                        <option value="" disabled selected>Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div class="field narrow">
-                    <label>Age</label>
-                    <input type="number" name="student_age" placeholder="Age" disabled>
+            <!-- Father's Information -->
+            <div class="sub-section section-locked" id="section-father">
+                <div class="section-subtitle">Father's Information</div>
+                <div class="field-row">
+                    <div class="field wide">
+                        <label>Last Name</label>
+                        <input type="text" name="father_last_name" placeholder="Last Name" disabled>
+                    </div>
+                    <div class="field wide">
+                        <label>First Name</label>
+                        <input type="text" name="father_first_name" placeholder="First Name" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Middle Name</label>
+                        <input type="text" name="father_middle_name" placeholder="Middle Name" disabled>
+                    </div>
+                    <div class="field narrow">
+                        <label>Suffix</label>
+                        <input type="text" name="father_suffix" placeholder="Suffix" disabled>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Father's Information -->
-        <div class="section-card section-locked" id="section-father">
-            <div class="section-title">Father's Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="father_last_name" placeholder="Last Name" disabled>
-                </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="father_first_name" placeholder="First Name" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="father_middle_name" placeholder="Middle Name" disabled>
-                </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="father_suffix" placeholder="Suffix" disabled>
+            <!-- Mother's Information -->
+            <div class="sub-section section-locked" id="section-mother">
+                <div class="section-subtitle">Mother's Information</div>
+                <div class="field-row">
+                    <div class="field wide">
+                        <label>Last Name</label>
+                        <input type="text" name="mother_last_name" placeholder="Last Name" disabled>
+                    </div>
+                    <div class="field wide">
+                        <label>First Name</label>
+                        <input type="text" name="mother_first_name" placeholder="First Name" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Middle Name</label>
+                        <input type="text" name="mother_middle_name" placeholder="Middle Name" disabled>
+                    </div>
+                    <div class="field narrow">
+                        <label>Suffix</label>
+                        <input type="text" name="mother_suffix" placeholder="Suffix" disabled>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Mother's Information -->
-        <div class="section-card section-locked" id="section-mother">
-            <div class="section-title">Mother's Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="mother_last_name" placeholder="Last Name" disabled>
-                </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="mother_first_name" placeholder="First Name" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="mother_middle_name" placeholder="Middle Name" disabled>
-                </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="mother_suffix" placeholder="Suffix" disabled>
+            <!-- Guardian's Information -->
+            <div class="sub-section section-locked" id="section-guardian">
+                <div class="section-subtitle">Guardian's Information</div>
+                <div class="field-row">
+                    <div class="field wide">
+                        <label>Last Name</label>
+                        <input type="text" name="guardian_last_name" placeholder="Last Name" disabled>
+                    </div>
+                    <div class="field wide">
+                        <label>First Name</label>
+                        <input type="text" name="guardian_first_name" placeholder="First Name" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Middle Name</label>
+                        <input type="text" name="guardian_middle_name" placeholder="Middle Name" disabled>
+                    </div>
+                    <div class="field narrow">
+                        <label>Suffix</label>
+                        <input type="text" name="guardian_suffix" placeholder="Suffix" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Contact Number</label>
+                        <input type="text" name="guardian_contact" placeholder="Contact Number" disabled>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Guardian's Information -->
-        <div class="section-card section-locked" id="section-guardian">
-            <div class="section-title">Guardian's Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="guardian_last_name" placeholder="Last Name" disabled>
-                </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="guardian_first_name" placeholder="First Name" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="guardian_middle_name" placeholder="Middle Name" disabled>
-                </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="guardian_suffix" placeholder="Suffix" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Contact Number</label>
-                    <input type="text" name="guardian_contact" placeholder="Contact Number" disabled>
-                </div>
-            </div>
-        </div>
-
-        <!-- Address Information -->
-        <div class="section-card section-locked" id="section-address">
-            <div class="section-title">Address Information</div>
-            <div class="field-row">
-                <div class="field narrow">
-                    <label>House No.</label>
-                    <input type="text" name="house_no" placeholder="House No." disabled>
-                </div>
-                <div class="field medium">
-                    <label>Street Name</label>
-                    <input type="text" name="street_name" placeholder="Street Name" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Barangay</label>
-                    <input type="text" name="barangay" placeholder="Barangay" disabled>
-                </div>
-                <div class="field narrow">
-                    <label>Zip Code</label>
-                    <input type="text" name="zip_code" placeholder="Zip Code" disabled>
-                </div>
-                <div class="field xwide">
-                    <label>Municipality / City</label>
-                    <input type="text" name="municipality_city" placeholder="Municipality / City" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Province</label>
-                    <input type="text" name="province" placeholder="Province" disabled>
-                </div>
-                <div class="field medium">
-                    <label>Country</label>
-                    <input type="text" name="country" value="Philippines" disabled>
+            <!-- Address Information -->
+            <div class="sub-section section-locked" id="section-address">
+                <div class="section-subtitle">Address Information</div>
+                <div class="field-row">
+                    <div class="field narrow">
+                        <label>House No.</label>
+                        <input type="text" name="house_no" placeholder="House No." disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Street Name</label>
+                        <input type="text" name="street_name" placeholder="Street Name" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Barangay</label>
+                        <input type="text" name="barangay" placeholder="Barangay" disabled>
+                    </div>
+                    <div class="field narrow">
+                        <label>Zip Code</label>
+                        <input type="text" name="zip_code" placeholder="Zip Code" disabled>
+                    </div>
+                    <div class="field xwide">
+                        <label>Municipality / City</label>
+                        <input type="text" name="municipality_city" placeholder="Municipality / City" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Province</label>
+                        <input type="text" name="province" placeholder="Province" disabled>
+                    </div>
+                    <div class="field medium">
+                        <label>Country</label>
+                        <input type="text" name="country" value="Philippines" disabled>
+                    </div>
                 </div>
             </div>
         </div>
