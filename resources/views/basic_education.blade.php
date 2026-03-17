@@ -74,6 +74,13 @@
             margin-right: auto;
         }
 
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
         .section-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -95,7 +102,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid rgba(30, 58, 138, 0.1);
         }
@@ -105,6 +112,7 @@
             flex-wrap: wrap;
             gap: 1rem;
             align-items: flex-end;
+            margin-bottom: 1.5rem;
         }
 
         .field {
@@ -127,7 +135,7 @@
             letter-spacing: 0.06em;
         }
 
-        .field input,
+        .field input:not([type="checkbox"]),
         .field select {
             width: 100%;
             padding: 0.65rem 1rem;
@@ -149,23 +157,81 @@
 
         .field input:disabled,
         .field select:disabled {
-            background: #f1f5f9;
-            color: #94a3b8;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-muted);
             cursor: not-allowed;
-            border-color: rgba(0,0,0,0.06);
-        }
-
-        .section-locked {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-
-        .section-unlocked {
-            opacity: 1;
-            pointer-events: auto;
+            opacity: 0.7;
         }
 
 
+        /* Checkbox Group Styles */
+        .checkbox-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-item span {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Credentials List Styles */
+        .credentials-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .credentials-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .credentials-item:last-child {
+            border-bottom: none;
+        }
+
+        .credentials-item span {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .credentials-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1200px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         @media (max-width: 768px) {
             .field-row { flex-direction: column; }
@@ -244,106 +310,211 @@
     <!-- Main Content -->
     <main class="checklist-content">
 
-        <!-- Student Information -->
-        <div class="section-card" id="section-student">
-            <div class="section-title">Student Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="student_last_name" placeholder="Last Name">
-                </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="student_first_name" placeholder="First Name">
-                </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="student_middle_name" placeholder="Middle Name">
-                </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
-                </div>
-                <div class="field medium" style="position: relative;">
-                    <label>Birthdate</label>
-                    <input type="text" name="student_birthdate" id="input-birthdate" placeholder="Select birthdate" readonly style="cursor: pointer;">
-                    <div class="datepicker-dropdown" id="birthdate-datepicker">
-                        <div class="dp-header">
-                            <div class="dp-month" id="dp-month-label">March 2026</div>
-                            <div class="dp-nav">
-                                <button type="button" class="dp-nav-btn" id="dp-prev">←</button>
-                                <button type="button" class="dp-nav-btn" id="dp-next">→</button>
+        <div class="layout-grid">
+            
+            <!-- Left Column: Forms -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                
+                <!-- Student Information -->
+                <div class="section-card" id="section-student">
+                    <div class="section-title">Student Information</div>
+                    <div class="field-row">
+                        <div class="field wide">
+                            <label>Last Name</label>
+                            <input type="text" name="student_last_name" placeholder="Last Name">
+                        </div>
+                        <div class="field wide">
+                            <label>First Name</label>
+                            <input type="text" name="student_first_name" placeholder="First Name">
+                        </div>
+                        <div class="field medium">
+                            <label>Middle Name</label>
+                            <input type="text" name="student_middle_name" placeholder="Middle Name">
+                        </div>
+                        <div class="field narrow">
+                            <label>Suffix</label>
+                            <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field medium" style="position: relative;">
+                            <label>Birthdate</label>
+                            <input type="text" name="student_birthdate" id="input-birthdate" placeholder="Select birthdate" readonly style="cursor: pointer;">
+                            <div class="datepicker-dropdown" id="birthdate-datepicker">
+                                <div class="dp-header">
+                                    <div class="dp-month" id="dp-month-label">March 2026</div>
+                                    <div class="dp-nav">
+                                        <button type="button" class="dp-nav-btn" id="dp-prev">←</button>
+                                        <button type="button" class="dp-nav-btn" id="dp-next">→</button>
+                                    </div>
+                                </div>
+                                <div class="dp-grid">
+                                    <div class="dp-weekday">Su</div>
+                                    <div class="dp-weekday">Mo</div>
+                                    <div class="dp-weekday">Tu</div>
+                                    <div class="dp-weekday">We</div>
+                                    <div class="dp-weekday">Th</div>
+                                    <div class="dp-weekday">Fr</div>
+                                    <div class="dp-weekday">Sa</div>
+                                </div>
+                                <div class="dp-grid" id="dp-days"></div>
                             </div>
                         </div>
-                        <div class="dp-grid">
-                            <div class="dp-weekday">Su</div>
-                            <div class="dp-weekday">Mo</div>
-                            <div class="dp-weekday">Tu</div>
-                            <div class="dp-weekday">We</div>
-                            <div class="dp-weekday">Th</div>
-                            <div class="dp-weekday">Fr</div>
-                            <div class="dp-weekday">Sa</div>
+                        <div class="field narrow">
+                            <label>Sex</label>
+                            <select name="student_sex">
+                                <option value="" disabled selected>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
                         </div>
-                        <div class="dp-grid" id="dp-days"></div>
+                        <div class="field narrow">
+                            <label>Age</label>
+                            <input type="number" name="student_age" placeholder="Age">
+                        </div>
                     </div>
                 </div>
-                <div class="field narrow">
-                    <label>Sex</label>
-                    <select name="student_sex">
-                        <option value="" disabled selected>Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
+
+                <!-- Educational Background & Enrollment Details -->
+                <div class="section-card" id="section-enrollment">
+                    <div class="section-title">Educational Background & Enrollment Details</div>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="balik_aral">
+                            <span>Balik Aral</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="senior_high">
+                            <span>Senior High</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="freshman">
+                            <span>Freshman</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="transferee">
+                            <span>Transferee</span>
+                        </label>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Grade Level</label>
+                            <select name="grade_level">
+                                <option value="" disabled selected>Select Grade</option>
+                                <option>Kindergarten</option>
+                                <option>Grade 1</option>
+                                <option>Grade 2</option>
+                                <option>Grade 3</option>
+                                <option>Grade 4</option>
+                                <option>Grade 5</option>
+                                <option>Grade 6</option>
+                                <option>Grade 7</option>
+                                <option>Grade 8</option>
+                                <option>Grade 9</option>
+                                <option>Grade 10</option>
+                                <option>Grade 11</option>
+                                <option>Grade 12</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>School Year</label>
+                            <input type="text" name="school_year" placeholder="e.g. 2024–2025">
+                        </div>
+                        <div class="field narrow">
+                            <label>Section</label>
+                            <input type="text" name="section" placeholder="Section">
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>LRN (If applicable)</label>
+                            <input type="text" name="lrn" placeholder="Enter LRN">
+                        </div>
+                        <div class="field">
+                            <label>ECS (If applicable)</label>
+                            <input type="text" name="ecs" placeholder="Enter ECS">
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>School last attended</label>
+                            <input type="text" name="last_school_name" placeholder="School Name">
+                        </div>
+                        <div class="field narrow">
+                            <label>Last SY</label>
+                            <input type="text" name="last_school_year" placeholder="2023-2024">
+                        </div>
+                        <div class="field narrow">
+                            <label>School ID</label>
+                            <input type="text" name="school_id" placeholder="School ID">
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Strand</label>
+                            <input type="text" name="strand" placeholder="Enter Strand">
+                        </div>
+                        <div class="field">
+                            <label>Semester</label>
+                            <select name="semester">
+                                <option value="" disabled selected>Select Semester</option>
+                                <option>1st Semester</option>
+                                <option>2nd Semester</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="field narrow">
-                    <label>Age</label>
-                    <input type="number" name="student_age" placeholder="Age">
+
+                <!-- Actions -->
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
+                    <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Credentials -->
+            <div class="section-card">
+                <div class="section-title">Credentials Check</div>
+                <div class="credentials-list">
+                    <div class="credentials-item">
+                        <span>Form 138</span>
+                        <input type="checkbox" name="credential_138">
+                    </div>
+                    <div class="credentials-item">
+                        <span>Form 137-A</span>
+                        <input type="checkbox" name="credential_137a">
+                    </div>
+                    <div class="credentials-item">
+                        <span>Good Morale</span>
+                        <input type="checkbox" name="credential_moral">
+                    </div>
+                    <div class="credentials-item">
+                        <span>Pictures</span>
+                        <input type="checkbox" name="credential_pics">
+                    </div>
+                    <div class="credentials-item">
+                        <span>PSA (Photocopy)</span>
+                        <input type="checkbox" name="credential_psa">
+                    </div>
+                    <div class="credentials-item">
+                        <span>Transfer Credentials</span>
+                        <input type="checkbox" name="credential_transfer">
+                    </div>
+                    <div class="credentials-item">
+                        <span>Transcript of Records</span>
+                        <input type="checkbox" name="credential_tor">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Grade Level -->
-        <div class="section-card" id="section-grade">
-            <div class="section-title">Grade Level & School Year</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Grade Level</label>
-                    <select name="grade_level">
-                        <option value="" disabled selected>Select Grade</option>
-                        <option>Kindergarten</option>
-                        <option>Grade 1</option>
-                        <option>Grade 2</option>
-                        <option>Grade 3</option>
-                        <option>Grade 4</option>
-                        <option>Grade 5</option>
-                        <option>Grade 6</option>
-                        <option>Grade 7</option>
-                        <option>Grade 8</option>
-                        <option>Grade 9</option>
-                        <option>Grade 10</option>
-                        <option>Grade 11</option>
-                        <option>Grade 12</option>
-                    </select>
-                </div>
-                <div class="field medium">
-                    <label>School Year</label>
-                    <input type="text" name="school_year" placeholder="e.g. 2024–2025">
-                </div>
-                <div class="field narrow">
-                    <label>Section</label>
-                    <input type="text" name="section" placeholder="Section">
-                </div>
-            </div>
-        </div>
-
-        <!-- Actions -->
-        <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
-            <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
         </div>
 
     </main>
-
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -439,6 +610,73 @@
                 if (dpMonth > 11) { dpMonth = 0; dpYear++; }
                 renderDP();
             });
+
+            // ── Dynamic Enrollment Fields Logic ──
+            function updateFormStates() {
+                const balikAral = document.querySelector('input[name="balik_aral"]').checked;
+                const seniorHigh = document.querySelector('input[name="senior_high"]').checked;
+                const freshman = document.querySelector('input[name="freshman"]').checked;
+                const transferee = document.querySelector('input[name="transferee"]').checked;
+
+                let enabledFields = ['grade_level', 'lrn', 'ecs'];
+                let enableAllContent = false;
+                let enableAllCredentials = false;
+
+                if (transferee) {
+                    enableAllContent = true;
+                    enableAllCredentials = true;
+                }
+                
+                if (freshman) {
+                    enableAllContent = true;
+                }
+
+                if (balikAral) {
+                    enabledFields.push('last_school_name', 'school_id');
+                }
+
+                if (seniorHigh) {
+                    enabledFields.push('strand', 'semester');
+                }
+
+                const enrollmentCard = document.getElementById('section-enrollment');
+                const enrollmentInputs = enrollmentCard.querySelectorAll('input:not([type="checkbox"]), select');
+
+                enrollmentInputs.forEach(input => {
+                    if (enableAllContent || enabledFields.includes(input.name)) {
+                        input.disabled = false;
+                    } else {
+                        input.disabled = true;
+                        // Clear out values on disable
+                        if(input.tagName === 'SELECT') {
+                            input.selectedIndex = 0;
+                        } else {
+                            input.value = '';
+                        }
+                    }
+                });
+
+                const credentialsInputs = document.querySelectorAll('.credentials-list input[type="checkbox"]');
+                credentialsInputs.forEach(input => {
+                    if (enableAllCredentials) {
+                        input.disabled = false;
+                        input.closest('.credentials-item').style.opacity = '1';
+                    } else {
+                        input.disabled = true;
+                        input.checked = false;
+                        input.closest('.credentials-item').style.opacity = '0.5';
+                    }
+                });
+            }
+
+            // Bind listeners
+            const modeCheckboxes = document.querySelectorAll('#section-enrollment .checkbox-group input[type="checkbox"]');
+            modeCheckboxes.forEach(cb => {
+                cb.addEventListener('change', updateFormStates);
+            });
+
+            // Run once on load
+            updateFormStates();
         });
     </script>
 </body>
