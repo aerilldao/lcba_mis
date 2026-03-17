@@ -34,17 +34,17 @@ Route::get('/checklist', function () {
 })->middleware('auth')->name('checklist');
 
 Route::get('/basic-education', function () {
-    return view('basic_education');
+    return view('forms.basic_education');
 })->middleware('auth')->name('basic_education');
 
 Route::get('/collegiate', function () {
-    return view('collegiate');
+    return view('forms.collegiate');
 })->middleware('auth')->name('collegiate');
 
 Route::get('/basic-education-records', function () {
-    return view('basic_education_records');
+    return view('records.basic_education_records');
 })->middleware('auth')->name('basic_education_records');
 
 Route::get('/collegiate-records', function () {
-    return view('collegiate_records');
+    return view('records.collegiate_records');
 })->middleware('auth')->name('collegiate_records');
