@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCBA - Basic Education</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/dark-mode.js') }}"></script>
+    @include('partials.head', ['title' => 'LCBA - Basic Education'])
     <style>
         .checklist-nav {
             display: flex;
@@ -284,27 +278,11 @@
 <body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
 
     <!-- Main Header -->
-    <nav class="checklist-nav">
-        <div class="checklist-nav-left">
-            <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="checklist-nav-logo">
-            <h1>BASIC EDUCATION</h1>
-        </div>
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
-            <button onclick="toggleDarkMode()" style="background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0.5rem; border-radius: 50%; transition: background-color 0.3s ease;" title="Toggle Night Mode">
-                <svg xmlns="http://www.w3.org/2000/svg" class="theme-icon-sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" class="theme-icon-moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-            </button>
-            <a href="{{ route('checklist') }}" class="btn-back" style="text-decoration: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                Back to Checklist
-            </a>
-            
-            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
-                @csrf
-                <button type="submit" class="btn-login" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Log Out</button>
-            </form>
-        </div>
-    </nav>
+    @include('partials.navbar-main', [
+        'title' => 'BASIC EDUCATION',
+        'backRoute' => route('checklist'),
+        'backText' => 'Back to Checklist'
+    ])
 
     <!-- Sub Navbar -->
     <div class="sub-navbar">

@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCBA - Basic Education Records</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/dark-mode.js') }}"></script>
+    @include('partials.head', ['title' => 'LCBA - Basic Education Records'])
     <style>
         .header-simple {
             display: flex;

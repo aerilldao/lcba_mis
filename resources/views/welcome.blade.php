@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCBA - Selection Portal</title>
-    <meta name="description" content="Welcome to the Laguna College of Business & Arts Portal. Select Guidance or Registrar to continue.">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/dark-mode.js') }}"></script>
+    @include('partials.head', ['title' => 'LCBA - Selection Portal'])
 </head>
 <body>
     <div class="background-animation"></div>
