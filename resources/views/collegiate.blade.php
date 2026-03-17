@@ -38,7 +38,7 @@
         .checklist-nav h1 {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--primary-color);
+            color: var(--primary-text-heading);
             letter-spacing: 0.05em;
             margin: 0;
         }
@@ -90,7 +90,7 @@
         }
 
         .section-title {
-            color: var(--primary-color);
+            color: var(--primary-text-heading);
             font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;

@@ -41,7 +41,7 @@
         .dashboard-nav h1 {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--primary-color);
+            color: var(--primary-text-heading);
             letter-spacing: 0.05em;
             margin: 0;
         }
@@ -153,7 +153,7 @@
         </div>
         <div style="display: flex; align-items: center; gap: 1.5rem;">
             <!-- Dark Mode Toggle -->
-            <button onclick="toggleDarkMode()" class="btn-login" style="padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--bg-alt); color: var(--text-main); border: 1px solid var(--card-border); cursor: pointer;">
+            <button onclick="toggleDarkMode()" class="btn-login" style="padding: 0.5rem; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border); cursor: pointer;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
             </button>
@@ -188,7 +188,7 @@
             
             <!-- Quick Notes -->
             <div class="card dashboard-main-area" style="width: 100%; max-width: none; padding: 2rem; flex: 1; display: flex; flex-direction: column;">
-                <h2 style="color: var(--primary-color); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: var(--primary-text-heading); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
                     Quick Notes
                     <span id="save-indicator" style="font-size: 0.75rem; font-weight: 400; color: var(--text-muted); opacity: 0; transition: opacity 0.3s;">Saving...</span>
                 </h2>
@@ -262,7 +262,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
                         <div class="stat-inner-card">
                             <h4 style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; margin-bottom: 0.25rem;">Basic Education</h4>
-                            <span style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); line-height: 1;">0</span>
+                            <span style="font-size: 2.5rem; font-weight: 800; color: var(--primary-text-heading); line-height: 1;">0</span>
                             <a href="{{ route('basic_education_records') }}" class="btn-view-records basic">View Records</a>
                         </div>
 
@@ -276,7 +276,7 @@
 
                 <!-- Detailed Counters -->
                 <div class="card" style="width: 100%; max-width: none; padding: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; text-align: center;">
-                    <h3 style="color: var(--primary-color); font-size: 1.15rem; margin-bottom: 0.5rem;">Enrollment Breakdown</h3>
+                    <h3 style="color: var(--primary-text-heading); font-size: 1.15rem; margin-bottom: 0.5rem;">Enrollment Breakdown</h3>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; width: 100%;">
                         <div style="text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -368,7 +368,7 @@
                 }
 
                 .calendar-header h3 {
-                    color: var(--primary-color);
+                    color: var(--primary-text-heading);
                     font-size: 1.5rem;
                     font-weight: 800;
                     margin: 0;
@@ -534,7 +534,7 @@
                     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 }
                 .cal-modal-overlay.active .cal-modal { transform: translateY(0) scale(1); }
-                .cal-modal h3 { color: var(--primary-color); margin-bottom: 1.25rem; font-weight: 800; }
+                .cal-modal h3 { color: var(--primary-text-heading); margin-bottom: 1.25rem; font-weight: 800; }
                 .cal-modal-field { margin-bottom: 1.25rem; }
                 .cal-modal-field label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
                 .cal-modal-field input, .cal-modal-field textarea {
@@ -564,7 +564,7 @@
                     max-height: 85vh; display: flex; flex-direction: column;
                 }
                 .cal-day-popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-                .cal-day-popup-header h4 { font-size: 1.25rem; font-weight: 800; color: var(--primary-color); margin: 0; }
+                .cal-day-popup-header h4 { font-size: 1.25rem; font-weight: 800; color: var(--primary-text-heading); margin: 0; }
                 .cal-day-popup-close { background: var(--bg-alt); border: 1px solid var(--card-border); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
                 .cal-day-popup-close:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
                 
