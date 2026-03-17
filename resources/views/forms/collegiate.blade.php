@@ -383,7 +383,6 @@
                         <option value="college_studies">College Studies</option>
                         <option value="graduate_studies">Graduate Studies</option>
                         <option value="cross_enrollee">Cross - Enrollee</option>
-                        <option value="unit_earner">Unit Earner</option>
                     </select>
                 </div>
                 <div class="field medium" id="sub_category_container" style="display: none;">
@@ -562,12 +561,6 @@
                     '1 Picture (2x2)',
                     'School ID (Photocopy)',
                     { label: 'Others (Indicate)', type: 'text' }
-                ],
-                unit_earner: [
-                    'Transcript of Records',
-                    'Pictures (2x2)',
-                    'PSA Birth Certificate (Photocopy)',
-                    'PSA Marriage Contract (If Married)'
                 ]
             };
 
@@ -620,8 +613,6 @@
                     renderChecklist(credentialSets.graduate_studies);
                 } else if (val === 'cross_enrollee') {
                     renderChecklist(credentialSets.cross_enrollee);
-                } else if (val === 'unit_earner') {
-                    renderChecklist(credentialSets.unit_earner);
                 }
             });
 
