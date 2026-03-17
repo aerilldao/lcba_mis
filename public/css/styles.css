@@ -59,7 +59,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: #ffffff;
+    background: var(--bg-main);
     animation: pulseBg 15s ease-in-out infinite alternate;
     z-index: 0;
 }
@@ -440,4 +440,37 @@ header h1 {
 .btn-login:hover {
     transform: translateY(-2px);
     box-shadow: 0 15px 25px -10px var(--primary-color);
+}
+
+/* Floating Theme Toggle */
+.theme-toggle-btn {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1) rotate(15deg);
+    background: var(--card-hover-bg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle-btn svg {
+    width: 20px;
+    height: 20px;
 }
