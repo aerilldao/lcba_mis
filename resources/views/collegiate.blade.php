@@ -165,8 +165,59 @@
             pointer-events: auto;
         }
 
+        /* Checkbox Group Styles */
+        .credentials-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
 
+        .credentials-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
 
+        .credentials-item:last-child {
+            border-bottom: none;
+        }
+
+        .credentials-item span {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .credentials-item input[type="text"].inline-input {
+            border: none;
+            border-bottom: 1px solid var(--text-muted);
+            border-radius: 0;
+            padding: 0 0.5rem;
+            background: transparent;
+            font-size: 0.82rem;
+            color: var(--text-main);
+            width: 150px;
+            outline: none;
+        }
+
+        .credentials-item input[type="text"].inline-input:focus {
+            border-bottom-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .credentials-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
         @media (max-width: 768px) {
             .field-row { flex-direction: column; }
             .field, .field.narrow, .field.medium, .field.wide, .field.xwide {
@@ -339,6 +390,55 @@
             </div>
         </div>
 
+        <!-- Credentials Check -->
+        <div class="section-card" id="section-credentials">
+            <div class="section-title">Credentials Check</div>
+            <div class="field-row">
+                <div class="field medium">
+                    <label>Student Category</label>
+                    <select name="student_category" id="student_category">
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="college_studies">College Studies</option>
+                        <option value="graduate_studies">Graduate Studies</option>
+                        <option value="cross_enrollee">Cross - Enrollee</option>
+                        <option value="unit_earner">Unit Earner</option>
+                    </select>
+                </div>
+                <div class="field medium" id="sub_category_container" style="display: none;">
+                    <label id="sub_category_label">Student Sub-Category</label>
+                    <select name="student_sub_category" id="student_sub_category">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </div>
+            
+            <div id="credentials_container" style="display: none; margin-top: 1.5rem;">
+                <label style="font-weight: 600; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Credentials Submitted (Check):</label>
+                <div class="credentials-list" id="credentials_list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Approval Route -->
+        <div class="section-card" id="section-approval">
+            <div class="section-title">Approval Route</div>
+            <div class="credentials-list">
+                <div class="credentials-item">
+                    <span>Registrar (For Credential)</span>
+                    <input type="checkbox" name="approval_registrar">
+                </div>
+                <div class="credentials-item">
+                    <span>Guidance Counselor (For Assessment / Interview)</span>
+                    <input type="checkbox" name="approval_guidance">
+                </div>
+                <div class="credentials-item">
+                    <span>Dean / Program Chair (For Approval)</span>
+                    <input type="checkbox" name="approval_dean">
+                </div>
+            </div>
+        </div>
+
         <!-- Actions -->
         <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
             <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
@@ -440,6 +540,117 @@
                 dpMonth++;
                 if (dpMonth > 11) { dpMonth = 0; dpYear++; }
                 renderDP();
+            });
+
+            // ── Dynamic Credentials Category Logic ──
+            const selCat = document.getElementById('student_category');
+            const subCatContainer = document.getElementById('sub_category_container');
+            const selSubCat = document.getElementById('student_sub_category');
+            const subCatLabel = document.getElementById('sub_category_label');
+            const credContainer = document.getElementById('credentials_container');
+            const credList = document.getElementById('credentials_list');
+
+            const credentialSets = {
+                college_freshman: [
+                    'Form 138 (Card)',
+                    'Form 137-A (If Available)',
+                    'Certificate of Good Moral Character',
+                    'Pictures (2x2)',
+                    'PSA Birth Certificate (Photocopy)',
+                    'PSA Marriage Contract (If Married)',
+                    'Others'
+                ],
+                college_transferee: [
+                    'Transfer Credential / Honorable Dismissal',
+                    'Certificate of Good Moral Character',
+                    'Pictures (2x2)',
+                    'PSA Birth Certificate (Photocopy)',
+                    'PSA Marriage Certificate (If Married)',
+                    'Others'
+                ],
+                graduate_studies: [
+                    'Transfer Credentials / Honorable Dismissal',
+                    'Pictures (2x2)',
+                    'PSA Birth Certificate (Photocopy)',
+                    'PSA Marriage Contract (If Married)',
+                    'Transcript of Records (Copy for LCBA)'
+                ],
+                cross_enrollee: [
+                    'Permit to Cross Enroll',
+                    '1 Picture (2x2)',
+                    'School ID (Photocopy)',
+                    { label: 'Others (Indicate)', type: 'text' }
+                ],
+                unit_earner: [
+                    'Transcript of Records',
+                    'Pictures (2x2)',
+                    'PSA Birth Certificate (Photocopy)',
+                    'PSA Marriage Contract (If Married)'
+                ]
+            };
+
+            function renderChecklist(items) {
+                credList.innerHTML = '';
+                if (!items) {
+                    credContainer.style.display = 'none';
+                    return;
+                }
+                
+                items.forEach((item, index) => {
+                    const rowContainer = document.createElement('div');
+                    rowContainer.className = 'credentials-item';
+                    
+                    const labelSpan = document.createElement('span');
+                    
+                    if (typeof item === 'object' && item.type === 'text') {
+                        labelSpan.innerHTML = `${item.label} <input type="text" class="inline-input" placeholder="...">`;
+                    } else {
+                        labelSpan.textContent = item;
+                    }
+                    
+                    const checkBox = document.createElement('input');
+                    checkBox.type = 'checkbox';
+                    checkBox.name = `credential_${index}`;
+                    
+                    rowContainer.appendChild(labelSpan);
+                    rowContainer.appendChild(checkBox);
+                    credList.appendChild(rowContainer);
+                });
+
+                credContainer.style.display = 'block';
+            }
+
+            selCat.addEventListener('change', (e) => {
+                const val = e.target.value;
+                selSubCat.innerHTML = '';
+                subCatContainer.style.display = 'none';
+                credContainer.style.display = 'none';
+                
+                if (val === 'college_studies') {
+                    subCatLabel.textContent = 'Entering Freshman/Transferee';
+                    selSubCat.innerHTML = `
+                        <option value="" disabled selected>Select</option>
+                        <option value="freshman">For Entering Freshman</option>
+                        <option value="transferee">Transferee</option>
+                    `;
+                    subCatContainer.style.display = 'flex';
+                } else if (val === 'graduate_studies') {
+                    renderChecklist(credentialSets.graduate_studies);
+                } else if (val === 'cross_enrollee') {
+                    renderChecklist(credentialSets.cross_enrollee);
+                } else if (val === 'unit_earner') {
+                    renderChecklist(credentialSets.unit_earner);
+                }
+            });
+
+            selSubCat.addEventListener('change', (e) => {
+                const catVal = selCat.value;
+                const subVal = e.target.value;
+
+                if (catVal === 'college_studies') {
+                    if (subVal === 'freshman') renderChecklist(credentialSets.college_freshman);
+                    if (subVal === 'transferee') renderChecklist(credentialSets.college_transferee);
+                }
             });
         });
     </script>
