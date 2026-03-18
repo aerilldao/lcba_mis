@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>LCBA - Checklist</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
@@ -350,21 +351,20 @@
                 <p class="id-hint" id="id-hint">Enter an ID number to unlock the form fields below.</p>
             </div>
 
-            <!-- Student Information -->
             <div class="sub-section section-locked" id="section-student">
                 <div class="section-subtitle">Student Information</div>
                 <div class="field-row">
                     <div class="field wide">
                         <label>Last Name</label>
-                        <input type="text" name="student_last_name" placeholder="Last Name" disabled>
+                        <input type="text" id="student_last_name" name="student_last_name" placeholder="Last Name" disabled>
                     </div>
                     <div class="field wide">
                         <label>First Name</label>
-                        <input type="text" name="student_first_name" placeholder="First Name" disabled>
+                        <input type="text" id="student_first_name" name="student_first_name" placeholder="First Name" disabled>
                     </div>
                     <div class="field medium">
                         <label>Middle Name</label>
-                        <input type="text" name="student_middle_name" placeholder="Middle Name" disabled>
+                        <input type="text" id="student_middle_name" name="student_middle_name" placeholder="Middle Name" disabled>
                     </div>
                     <div class="field narrow">
                         <label>Suffix</label>
@@ -401,7 +401,7 @@
                     </div>
                     <div class="field narrow">
                         <label>Sex</label>
-                        <select name="student_sex" disabled>
+                        <select id="student_sex" name="student_sex" disabled>
                             <option value="" disabled selected>Select</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -409,7 +409,7 @@
                     </div>
                     <div class="field narrow">
                         <label>Age</label>
-                        <input type="number" name="student_age" placeholder="Age" disabled>
+                        <input type="number" id="student_age" name="student_age" placeholder="Age" disabled>
                     </div>
                 </div>
             </div>
@@ -560,8 +560,81 @@
                 : 'Enter an ID number to unlock the form fields below.';
         }
 
+        let idLookupTimer = null;
+        const LOOKUP_URL = '{{ route("checklist.lookup") }}';
+
+        function setHint(msg, color) {
+            idHint.textContent = msg;
+            idHint.style.color = color || '';
+        }
+
+        function clearStudentFields() {
+            document.getElementById('student_last_name').value  = '';
+            document.getElementById('student_first_name').value = '';
+            document.getElementById('student_middle_name').value = '';
+            document.getElementById('checklist-input-date').value = '';
+            document.getElementById('student_sex').value = '';
+            document.getElementById('student_age').value = '';
+        }
+
+        function populateStudentFields(data) {
+            document.getElementById('student_last_name').value   = data.last_name   || '';
+            document.getElementById('student_first_name').value  = data.first_name  || '';
+            document.getElementById('student_middle_name').value = data.middle_name || '';
+            document.getElementById('checklist-input-date').value = data.date_of_birth || '';
+
+            const sexSelect = document.getElementById('student_sex');
+            const sexVal = (data.sex || '').trim();
+            // Try to match Male / Female case-insensitively
+            for (let i = 0; i < sexSelect.options.length; i++) {
+                if (sexSelect.options[i].value.toLowerCase() === sexVal.toLowerCase()) {
+                    sexSelect.selectedIndex = i;
+                    break;
+                }
+            }
+
+            document.getElementById('student_age').value = data.age || '';
+        }
+
         idInput.addEventListener('input', function() {
-            toggleSections(this.value.trim().length > 0);
+            const val = this.value.trim();
+
+            // Always clear timer on new keystroke
+            clearTimeout(idLookupTimer);
+
+            if (val.length === 0) {
+                toggleSections(false);
+                clearStudentFields();
+                setHint('Enter an ID number to unlock the form fields below.');
+                return;
+            }
+
+            // Unlock UI immediately so user can see the form
+            toggleSections(true);
+            setHint('Looking up student…', 'var(--text-muted)');
+
+            // Debounce: wait 400ms after user stops typing before fetching
+            idLookupTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`${LOOKUP_URL}?id_number=${encodeURIComponent(val)}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.found) {
+                        populateStudentFields(data);
+                        setHint('✓ Student found — fields populated. You may still edit them.', 'green');
+                    } else {
+                        clearStudentFields();
+                        setHint('No student found with this ID. You may fill in the form manually.', 'orange');
+                    }
+                } catch (err) {
+                    setHint('Lookup failed. Please check your connection.', 'red');
+                }
+            }, 400);
         });
 
         // Datepicker Logic

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperUserController;
 
@@ -30,6 +31,8 @@ Route::delete('/dashboard/events/{event}', [DashboardController::class, 'deleteE
 Route::get('/checklist', function () {
     return view('checklist');
 })->middleware('auth')->name('checklist');
+
+Route::get('/checklist/lookup-student', [ChecklistController::class, 'lookupStudent'])->middleware('auth')->name('checklist.lookup');
 
 Route::get('/basic-education', function () {
     return view('forms.basic_education');
