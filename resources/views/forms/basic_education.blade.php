@@ -454,7 +454,7 @@
                 </div>
 
                 <!-- Right Column: Credentials -->
-                <div class="section-card">
+                <div class="section-card" id="section-credentials">
                     <div class="section-title">Credentials Check</div>
                     <div class="credentials-list" id="credentials-container">
                         @php
@@ -530,6 +530,25 @@
                         }
                     }
                 });
+
+                // ── Credentials Check Logic ──
+                const credentialsCard = document.getElementById('section-credentials');
+                const credentialsInputs = credentialsCard.querySelectorAll('input[type="checkbox"]');
+                
+                const showCredentials = freshman || transferee;
+                
+                if (showCredentials) {
+                    credentialsCard.style.opacity = '1';
+                    credentialsCard.style.pointerEvents = 'auto';
+                    credentialsInputs.forEach(cb => cb.disabled = false);
+                } else {
+                    credentialsCard.style.opacity = '0.4';
+                    credentialsCard.style.pointerEvents = 'none';
+                    credentialsInputs.forEach(cb => {
+                        cb.disabled = true;
+                        cb.checked = false;
+                    });
+                }
             }
 
             // Bind listeners

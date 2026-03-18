@@ -418,7 +418,7 @@
                 <!-- Right Column -->
                 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                     
-                    <div class="section-card">
+                    <div class="section-card" id="section-credentials">
                         <div class="section-title">Credentials Check</div>
                         <div class="credentials-list" id="credentials-container">
                             @php
@@ -471,7 +471,35 @@
 
 
     <script>
-        // setStatus logic removed
+        document.addEventListener('DOMContentLoaded', () => {
+            const isFreshman = document.getElementById('is_freshman');
+            const isTransferee = document.getElementById('is_transferee');
+            const credentialsCard = document.getElementById('section-credentials');
+            const credentialsInputs = credentialsCard.querySelectorAll('input[type="checkbox"]');
+
+            function updateCredentialsState() {
+                const isEnabled = isFreshman.checked || isTransferee.checked;
+                
+                if (isEnabled) {
+                    credentialsCard.style.opacity = '1';
+                    credentialsCard.style.pointerEvents = 'auto';
+                    credentialsInputs.forEach(cb => cb.disabled = false);
+                } else {
+                    credentialsCard.style.opacity = '0.4';
+                    credentialsCard.style.pointerEvents = 'none';
+                    credentialsInputs.forEach(cb => {
+                        cb.disabled = true;
+                        cb.checked = false;
+                    });
+                }
+            }
+
+            if (isFreshman) isFreshman.addEventListener('change', updateCredentialsState);
+            if (isTransferee) isTransferee.addEventListener('change', updateCredentialsState);
+
+            // Run once on load
+            updateCredentialsState();
+        });
     </script>
 </body>
 </html>
