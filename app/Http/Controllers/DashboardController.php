@@ -10,7 +10,34 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $kinderElem = \App\Models\BasicEducation::whereIn('grade_level', [
+            'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'
+        ])->count();
+
+        $juniorHigh = \App\Models\BasicEducation::whereIn('grade_level', [
+            'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'
+        ])->count();
+
+        $seniorHigh = \App\Models\BasicEducation::whereIn('grade_level', [
+            'Grade 11', 'Grade 12'
+        ])->count();
+
+        $college = \App\Models\CgStudy::where('year_level', '!=', 'Graduate / Masteral')->count();
+
+        $graduateStudies = \App\Models\CgStudy::where('year_level', 'Graduate / Masteral')->count();
+
+        $totalBasic = $kinderElem + $juniorHigh + $seniorHigh;
+        $totalCollege = $college + $graduateStudies;
+
+        return view('dashboard', compact(
+            'kinderElem', 
+            'juniorHigh', 
+            'seniorHigh', 
+            'college', 
+            'graduateStudies',
+            'totalBasic',
+            'totalCollege'
+        ));
     }
 
     public function updateNotes(Request $request)
