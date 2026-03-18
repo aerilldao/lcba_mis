@@ -421,11 +421,7 @@
                         </div>
                     </div>
 
-                    <!-- Actions -->
-                    <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
-                        <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Complete Registration</button>
                     </div>
-
                 </div>
 
                 <!-- Right Column -->
@@ -441,12 +437,13 @@
                         </div>
                     </div>
 
+                    <!-- Moved Actions here -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 2rem;">
+                        <button type="submit" class="btn-login" style="width: 100%; padding: 0.85rem; font-weight: 700; letter-spacing: 0.05em;">COMPLETE REGISTRATION</button>
                     </div>
-                </div>
 
-                </div>
-
-            </div>
+                </div> <!-- End Right Column -->
+            </div> <!-- End Layout Grid -->
         </form>
 
     </main>
