@@ -377,14 +377,14 @@
                                     </optgroup>
 
                                     <optgroup label="GRADUATE PROGRAMS">
-                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Guidance and Counseling') ? 'selected' : '' }}>Master of Arts in Education Major in Guidance and Counseling</option>
-                                        <option {{ ($record && $record->course == 'Master in Business Administration') ? 'selected' : '' }}>Master in Business Administration</option>
-                                        <option {{ ($record && $record->course == 'Master of Science in Psychology') ? 'selected' : '' }}>Master of Science in Psychology</option>
-                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Administration and Supervision') ? 'selected' : '' }}>Master of Arts in Education Major in Administration and Supervision</option>
-                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in English') ? 'selected' : '' }}>Master of Arts in Education Major in English</option>
-                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Filipino') ? 'selected' : '' }}>Master of Arts in Education Major in Filipino</option>
-                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Social Studies') ? 'selected' : '' }}>Master of Arts in Education Major in Social Studies</option>
-                                        <option {{ ($record && $record->course == 'Master in Management major in Public Administration') ? 'selected' : '' }}>Master in Management major in Public Administration</option>
+                                        <option {{ ($record && $record->course == 'MASTER OF ARTS IN EDUCATION MAJOR IN GUIDANCE AND COUNSELING') ? 'selected' : '' }}>MASTER OF ARTS IN EDUCATION MAJOR IN GUIDANCE AND COUNSELING</option>
+                                        <option {{ ($record && $record->course == 'MASTER IN BUSINESS ADMINISTRATION') ? 'selected' : '' }}>MASTER IN BUSINESS ADMINISTRATION</option>
+                                        <option {{ ($record && $record->course == 'MASTER OF SCIENCE IN PSYCHOLOGY') ? 'selected' : '' }}>MASTER OF SCIENCE IN PSYCHOLOGY</option>
+                                        <option {{ ($record && $record->course == 'MASTER OF ARTS IN EDUCATION MAJOR IN ADMINISTRATION AND SUPERVISION') ? 'selected' : '' }}>MASTER OF ARTS IN EDUCATION MAJOR IN ADMINISTRATION AND SUPERVISION</option>
+                                        <option {{ ($record && $record->course == 'MASTER OF ARTS IN EDUCATION MAJOR IN ENGLISH') ? 'selected' : '' }}>MASTER OF ARTS IN EDUCATION MAJOR IN ENGLISH</option>
+                                        <option {{ ($record && $record->course == 'MASTER OF ARTS IN EDUCATION MAJOR IN FILIPINO') ? 'selected' : '' }}>MASTER OF ARTS IN EDUCATION MAJOR IN FILIPINO</option>
+                                        <option {{ ($record && $record->course == 'MASTER OF ARTS IN EDUCATION MAJOR IN SOCIAL STUDIES') ? 'selected' : '' }}>MASTER OF ARTS IN EDUCATION MAJOR IN SOCIAL STUDIES</option>
+                                        <option {{ ($record && $record->course == 'MASTER IN MANAGEMENT MAJOR IN PUBLIC ADMINISTRATION') ? 'selected' : '' }}>MASTER IN MANAGEMENT MAJOR IN PUBLIC ADMINISTRATION</option>
                                     </optgroup>
                                 </select>
                             </div>
