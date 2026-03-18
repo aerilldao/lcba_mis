@@ -241,7 +241,55 @@
             transform: translateY(0);
         }
         .dp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .dp-month-container { display: flex; align-items: center; gap: 0.5rem; }
         .dp-month { font-weight: 800; font-size: 0.85rem; color: #fff; text-transform: uppercase; }
+        .dp-year-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid transparent;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            padding: 4px 10px;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .dp-year-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        .dp-years-view {
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .dp-years-view.active {
+            display: grid;
+        }
+        .dp-year-item {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .dp-year-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .dp-year-item.selected { background: var(--primary-color); color: #fff; }
+        
+        .dp-years-view::-webkit-scrollbar { width: 4px; }
+        .dp-years-view::-webkit-scrollbar-track { background: transparent; }
+        .dp-years-view::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        .dp-years-view::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
+        .dp-calendar-view { display: block; }
+        .dp-calendar-view.hidden { display: none; }
         .dp-nav { display: flex; gap: 0.5rem; }
         .dp-nav-btn { background: rgba(255,255,255,0.05); border: none; color: #fff; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
         .dp-nav-btn:hover { background: var(--primary-color); }
@@ -327,22 +375,28 @@
                         <input type="text" id="checklist-input-date" name="student_birthdate" placeholder="YYYY-MM-DD" readonly disabled style="cursor: pointer;">
                         <div class="datepicker-dropdown" id="checklist-datepicker">
                             <div class="dp-header">
-                                <div class="dp-month" id="dp-month-label">March 2026</div>
-                                <div class="dp-nav">
+                                <div class="dp-month-container">
+                                    <div class="dp-month" id="dp-month-label">March</div>
+                                    <button type="button" id="dp-year-btn" class="dp-year-btn">2026</button>
+                                </div>
+                                <div class="dp-nav" id="dp-nav">
                                     <button type="button" class="dp-nav-btn" id="dp-prev">←</button>
                                     <button type="button" class="dp-nav-btn" id="dp-next">→</button>
                                 </div>
                             </div>
-                            <div class="dp-grid">
-                                <div class="dp-weekday">Su</div>
-                                <div class="dp-weekday">Mo</div>
-                                <div class="dp-weekday">Tu</div>
-                                <div class="dp-weekday">We</div>
-                                <div class="dp-weekday">Th</div>
-                                <div class="dp-weekday">Fr</div>
-                                <div class="dp-weekday">Sa</div>
+                            <div id="dp-calendar-view" class="dp-calendar-view">
+                                <div class="dp-grid">
+                                    <div class="dp-weekday">Su</div>
+                                    <div class="dp-weekday">Mo</div>
+                                    <div class="dp-weekday">Tu</div>
+                                    <div class="dp-weekday">We</div>
+                                    <div class="dp-weekday">Th</div>
+                                    <div class="dp-weekday">Fr</div>
+                                    <div class="dp-weekday">Sa</div>
+                                </div>
+                                <div class="dp-grid" id="dp-days"></div>
                             </div>
-                            <div class="dp-grid" id="dp-days"></div>
+                            <div id="dp-years-view" class="dp-years-view"></div>
                         </div>
                     </div>
                     <div class="field narrow">
@@ -520,7 +574,56 @@
         const dpInput = document.getElementById('checklist-input-date');
         const dpDropdown = document.getElementById('checklist-datepicker');
         const dpMonthLabel = document.getElementById('dp-month-label');
+        const dpYearBtn = document.getElementById('dp-year-btn');
         const dpDaysGrid = document.getElementById('dp-days');
+        const dpCalendarView = document.getElementById('dp-calendar-view');
+        const dpYearsView = document.getElementById('dp-years-view');
+        const dpNav = document.getElementById('dp-nav');
+        
+        let currentView = 'calendar';
+
+        function renderYears() {
+            dpYearsView.innerHTML = '';
+            const currentYearObj = new Date().getFullYear();
+            for (let y = currentYearObj; y >= currentYearObj - 100; y--) {
+                const yearEl = document.createElement('div');
+                yearEl.className = 'dp-year-item';
+                if (y === dpYear) yearEl.classList.add('selected');
+                yearEl.textContent = y;
+                yearEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dpYear = y;
+                    currentView = 'calendar';
+                    updateView();
+                    renderDP();
+                });
+                dpYearsView.appendChild(yearEl);
+            }
+        }
+
+        function updateView() {
+            if (currentView === 'calendar') {
+                dpCalendarView.classList.remove('hidden');
+                dpYearsView.classList.remove('active');
+                dpNav.style.visibility = 'visible';
+            } else {
+                dpCalendarView.classList.add('hidden');
+                dpYearsView.classList.add('active');
+                dpNav.style.visibility = 'hidden';
+                setTimeout(() => {
+                    const selectedYearEl = dpYearsView.querySelector('.dp-year-item.selected');
+                    if (selectedYearEl) selectedYearEl.scrollIntoView({ block: 'center', behavior: 'instant' });
+                }, 10);
+            }
+        }
+
+        dpYearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentView = currentView === 'calendar' ? 'years' : 'calendar';
+            if (currentView === 'years') renderYears();
+            updateView();
+        });
+
         const dpPrev = document.getElementById('dp-prev');
         const dpNext = document.getElementById('dp-next');
 
@@ -539,6 +642,8 @@
                     dpMonth = new Date().getMonth();
                     dpYear = new Date().getFullYear();
                 }
+                currentView = 'calendar';
+                updateView();
                 renderDP();
             }
         });
@@ -550,7 +655,8 @@
         });
 
         function renderDP() {
-            dpMonthLabel.textContent = `${dpMONTHS[dpMonth]} ${dpYear}`;
+            dpMonthLabel.textContent = dpMONTHS[dpMonth];
+            dpYearBtn.textContent = dpYear;
             dpDaysGrid.innerHTML = '';
 
             const firstDay = new Date(dpYear, dpMonth, 1).getDay();
