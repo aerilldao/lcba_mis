@@ -348,23 +348,15 @@
                     <div class="section-card" id="section-program">
                         <div class="section-title">Program & Year Level</div>
 
-                        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
-                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                <input type="checkbox" name="is_freshman" id="is_freshman" {{ $record && $record->is_freshman ? 'checked' : '' }}>
-                                <span>Freshman</span>
-                            </label>
-                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                <input type="checkbox" name="is_transferee" id="is_transferee" {{ $record && $record->is_transferee ? 'checked' : '' }}>
-                                <span>Transferee</span>
-                            </label>
-                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                <input type="checkbox" name="is_cross_enrollee" id="is_cross_enrollee" {{ $record && $record->is_cross_enrollee ? 'checked' : '' }}>
-                                <span>Cross-Enrollee</span>
-                            </label>
-                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                <input type="checkbox" name="is_returnee" id="is_returnee" {{ $record && $record->is_returnee ? 'checked' : '' }}>
-                                <span>Returnee</span>
-                            </label>
+                        <div class="field-row" style="margin-bottom: 1.5rem;">
+                            <div class="field wide">
+                                <label>Student Category</label>
+                                <select name="student_category" id="student_category">
+                                    <option value="" disabled {{ !$record || (!$record->is_freshman && !$record->is_transferee) ? 'selected' : '' }}>Select Category</option>
+                                    <option value="freshman" {{ $record && $record->is_freshman ? 'selected' : '' }}>Freshman</option>
+                                    <option value="transferee" {{ $record && $record->is_transferee ? 'selected' : '' }}>Transferee</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="field-row" style="margin-bottom: 1.5rem;">
@@ -406,6 +398,27 @@
                                 <input type="text" name="section" placeholder="Section" value="{{ $record->section ?? '' }}">
                             </div>
                         </div>
+
+                        <!-- Student Credentials Section -->
+                        <div class="field-row" style="margin-top: 1.5rem;">
+                            <div class="field wide">
+                                <label>Student Credentials</label>
+                                <select name="student_credentials" id="student_credentials">
+                                    <option value="" disabled selected>Select Credentials Path</option>
+                                    <option value="college_studies">COLLEGE STUDIES</option>
+                                    <option value="graduate_studies">GRADUATE STUDIES</option>
+                                    <option value="cross_enrollee">CROSS - ENROLLEE</option>
+                                </select>
+                            </div>
+                            <div class="field wide" id="sub_category_wrapper" style="display: none;">
+                                <label>Type</label>
+                                <select name="student_sub_category" id="student_sub_category">
+                                    <option value="" disabled selected>Select Type</option>
+                                    <option value="freshman">FOR ENTERING FRESHMAN</option>
+                                    <option value="transferee">TRANSFEREE</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Actions -->
@@ -421,45 +434,15 @@
                     <div class="section-card" id="section-credentials">
                         <div class="section-title">Credentials Check</div>
                         <div class="credentials-list" id="credentials-container">
-                            @php
-                                $items = [
-                                    'Honorable Dismissal' => 'honorable',
-                                    'Transcript of Records' => 'tor',
-                                    'Certificate of Good Moral' => 'moral',
-                                    'Pictures (2x2)' => 'pics',
-                                    'PSA Birth Certificate' => 'psa',
-                                    'Marriage Contract' => 'marriage',
-                                    'Permit to Cross Enroll' => 'cross_permit'
-                                ];
-                            @endphp
-
-                            @foreach($items as $label => $key)
-                            <div class="credentials-item">
-                                <span>{{ $label }}</span>
-                                <input type="checkbox" name="credentials[{{ $key }}]" value="true" class="checkbox-custom" {{ ($record && isset($record->credentials[$key]) && $record->credentials[$key] == 'true') ? 'checked' : '' }}>
+                            <!-- Dynamically populated by JavaScript -->
+                            <div style="padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-style: italic;">
+                                Please select a credentials path above to see required items.
                             </div>
-                            @endforeach
                         </div>
                     </div>
 
-                    <div class="section-card">
-                        <div class="section-title">Approval Route</div>
-                        <div class="credentials-list">
-                            @php
-                                $approvals = [
-                                    'Registrar' => 'registrar',
-                                    'Guidance' => 'guidance',
-                                    'Dean / Program Chair' => 'dean'
-                                ];
-                            @endphp
-                            @foreach($approvals as $lbl => $ak)
-                            <div class="credentials-item">
-                                <span>{{ $lbl }}</span>
-                                <input type="checkbox" name="approvals[{{ $ak }}]" value="true" class="checkbox-custom" {{ ($record && isset($record->approvals[$ak]) && $record->approvals[$ak] == 'true') ? 'checked' : '' }}>
-                            </div>
-                            @endforeach
-                        </div>
                     </div>
+                </div>
 
                 </div>
 
@@ -472,33 +455,110 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const isFreshman = document.getElementById('is_freshman');
-            const isTransferee = document.getElementById('is_transferee');
-            const credentialsCard = document.getElementById('section-credentials');
-            const credentialsInputs = credentialsCard.querySelectorAll('input[type="checkbox"]');
+            const categorySelect     = document.getElementById('student_category');
+            const credentialsSelect  = document.getElementById('student_credentials');
+            const subCategorySelect  = document.getElementById('student_sub_category');
+            const subCategoryWrapper = document.getElementById('sub_category_wrapper');
+            const credentialsCard    = document.getElementById('section-credentials');
+            const credentialsList    = document.getElementById('credentials-container');
 
-            function updateCredentialsState() {
-                const isEnabled = isFreshman.checked || isTransferee.checked;
+            const credentialSets = {
+                'college_studies_freshman': [
+                    { label: 'Form 138 (Card)', key: 'f138' },
+                    { label: 'Form 137-A (if available)', key: 'f137a' },
+                    { label: 'Certificate of Good Moral Character', key: 'moral' },
+                    { label: 'Pictures (2x2)', key: 'pics' },
+                    { label: 'PSA Birth Certificate (Photocopy)', key: 'psa' },
+                    { label: 'PSA Marriage Contract (if married)', key: 'marriage' },
+                    { label: 'Others', key: 'others' }
+                ],
+                'college_studies_transferee': [
+                    { label: 'Transfer Credential / Honorable Dismissal', key: 'transfer' },
+                    { label: 'Certificate of Good Moral Character', key: 'moral' },
+                    { label: 'Pictures (2x2)', key: 'pics' },
+                    { label: 'PSA Birth Certificate (Photocopy)', key: 'psa' },
+                    { label: 'PSA Marriage Contract (if married)', key: 'marriage' },
+                    { label: 'Others', key: 'others' }
+                ],
+                // Default sets for others if you wish to add them later
+                'graduate_studies': [
+                    { label: 'Transfer Credentials / Honorable Dismissal', key: 'transfer_honorable' },
+                    { label: 'Pictures (2x2)', key: 'pics' },
+                    { label: 'PSA Birth Certificate (Photocopy)', key: 'psa' },
+                    { label: 'PSA Marriage Contract (if married)', key: 'marriage' },
+                    { label: 'Transcript of Records (Copy for LCBA)', key: 'tor_lcba' }
+                ],
+                'cross_enrollee': [
+                    { label: 'Permit to Cross Enroll', key: 'cross_permit' },
+                    { label: '1 Picture (2x2)', key: 'pic' },
+                    { label: 'School ID (Photocopy)', key: 'school_id' },
+                    { label: 'Others', key: 'others' }
+                ]
+            };
+
+            function renderCredentials(setName) {
+                const items = credentialSets[setName];
+                if (!items) {
+                    credentialsList.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Please select a valid sub-category.</div>';
+                    return;
+                }
+
+                credentialsList.innerHTML = '';
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'credentials-item';
+                    div.innerHTML = `
+                        <span>${item.label}</span>
+                        <input type="checkbox" name="credentials[${item.key}]" value="true" class="checkbox-custom">
+                    `;
+                    credentialsList.appendChild(div);
+                });
+            }
+
+            function updateLogic() {
+                const credVal = credentialsSelect.value;
+                const subVal  = subCategorySelect.value;
+
+                // Show/Hide sub category
+                if (credVal === 'college_studies') {
+                    subCategoryWrapper.style.display = 'block';
+                    if (subVal) {
+                        renderCredentials(`college_studies_${subVal}`);
+                    } else {
+                        credentialsList.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Please select a type (Freshman/Transferee).</div>';
+                    }
+                } else {
+                    subCategoryWrapper.style.display = 'none';
+                    if (credVal) {
+                        renderCredentials(credVal);
+                    } else {
+                        credentialsList.innerHTML = '<div style="padding: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Please select a credentials path above.</div>';
+                    }
+                }
+            }
+
+            credentialsSelect.addEventListener('change', () => {
+                subCategorySelect.selectedIndex = 0;
+                updateLogic();
+            });
+            subCategorySelect.addEventListener('change', updateLogic);
+
+            // Basic availability logic (Freshman/Transferee locked/unlocked)
+            function updateVisibility() {
+                const val = categorySelect.value;
+                const isEnabled = (val === 'freshman' || val === 'transferee');
                 
                 if (isEnabled) {
                     credentialsCard.style.opacity = '1';
                     credentialsCard.style.pointerEvents = 'auto';
-                    credentialsInputs.forEach(cb => cb.disabled = false);
                 } else {
                     credentialsCard.style.opacity = '0.4';
                     credentialsCard.style.pointerEvents = 'none';
-                    credentialsInputs.forEach(cb => {
-                        cb.disabled = true;
-                        cb.checked = false;
-                    });
                 }
             }
 
-            if (isFreshman) isFreshman.addEventListener('change', updateCredentialsState);
-            if (isTransferee) isTransferee.addEventListener('change', updateCredentialsState);
-
-            // Run once on load
-            updateCredentialsState();
+            categorySelect.addEventListener('change', updateVisibility);
+            updateVisibility();
         });
     </script>
 </body>

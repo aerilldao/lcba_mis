@@ -36,14 +36,14 @@ class ChecklistController extends Controller
 
         $data = $request->except(['_token', 'reg_id']);
         
-        // Handle checkbox booleans
-        $data['is_freshman']      = $request->has('is_freshman');
-        $data['is_transferee']    = $request->has('is_transferee');
-        $data['is_cross_enrollee'] = $request->has('is_cross_enrollee');
-        $data['is_returnee']      = $request->has('is_returnee');
+        // Handle student category dropdown mapping
+        $cat = $request->input('student_category');
+        $data['is_freshman']       = ($cat === 'freshman');
+        $data['is_transferee']     = ($cat === 'transferee');
+        $data['is_cross_enrollee'] = ($cat === 'cross_enrollee');
+        $data['is_returnee']       = ($cat === 'returnee');
 
         $data['credentials']    = $request->input('credentials', []);
-        $data['approvals']      = $request->input('approvals', []);
 
         $record->update($data);
 
