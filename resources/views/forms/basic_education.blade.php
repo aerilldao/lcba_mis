@@ -273,6 +273,28 @@
         .dp-day.selected { background: var(--primary-color); color: #fff; }
         .dp-day.today { color: var(--primary-color); position: relative; }
         .dp-day.today::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--primary-color); }
+
+        .display-field { display: flex; flex-direction: column; gap: 0.25rem; }
+        .display-field label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .display-field span { font-size: 1.05rem; color: var(--primary-text-heading); font-weight: 700; }
+        .student-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+
+        .credentials-item {
+            display: grid;
+            grid-template-columns: 1fr 100px;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background 0.3s;
+        }
+        .credentials-item:hover { background: rgba(0,0,0,0.02); }
+        .credentials-status { display: flex; gap: 0.5rem; justify-content: flex-end; }
+        .checkbox-custom {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
     </style>
 </head>
 <body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
@@ -292,315 +314,185 @@
     <!-- Main Content -->
     <main class="checklist-content">
 
-        <div class="layout-grid">
-            
-            <!-- Left Column: Forms -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <form action="{{ route('checklist.finish.basic') }}" method="POST">
+            @csrf
+            <input type="hidden" name="reg_id" value="{{ $record->id ?? '' }}">
+
+            <div class="layout-grid">
                 
-                <!-- Student Information -->
-                <div class="section-card" id="section-student">
-                    <div class="section-title">Student Information</div>
-                    <div class="field-row">
-                        <div class="field wide">
-                            <label>Last Name</label>
-                            <input type="text" name="student_last_name" placeholder="Last Name">
-                        </div>
-                        <div class="field wide">
-                            <label>First Name</label>
-                            <input type="text" name="student_first_name" placeholder="First Name">
-                        </div>
-                        <div class="field medium">
-                            <label>Middle Name</label>
-                            <input type="text" name="student_middle_name" placeholder="Middle Name">
-                        </div>
-                        <div class="field narrow">
-                            <label>Suffix</label>
-                            <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
-                        </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field medium" style="position: relative;">
-                            <label>Birthdate</label>
-                            <input type="text" name="student_birthdate" id="input-birthdate" placeholder="Select birthdate" readonly style="cursor: pointer;">
-                            <div class="datepicker-dropdown" id="birthdate-datepicker">
-                                <div class="dp-header">
-                                    <div class="dp-month" id="dp-month-label">March 2026</div>
-                                    <div class="dp-nav">
-                                        <button type="button" class="dp-nav-btn" id="dp-prev">←</button>
-                                        <button type="button" class="dp-nav-btn" id="dp-next">→</button>
-                                    </div>
-                                </div>
-                                <div class="dp-grid">
-                                    <div class="dp-weekday">Su</div>
-                                    <div class="dp-weekday">Mo</div>
-                                    <div class="dp-weekday">Tu</div>
-                                    <div class="dp-weekday">We</div>
-                                    <div class="dp-weekday">Th</div>
-                                    <div class="dp-weekday">Fr</div>
-                                    <div class="dp-weekday">Sa</div>
-                                </div>
-                                <div class="dp-grid" id="dp-days"></div>
+                <!-- Left Column: Forms -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    
+                    <!-- Student Information (Display Card) -->
+                    <div class="section-card" id="section-student" style="background: linear-gradient(145deg, var(--card-bg), rgba(30, 58, 138, 0.03));">
+                        <div class="section-title">Student Registration Data</div>
+                        
+                        @if($record)
+                        <div class="student-info-grid">
+                            <div class="display-field">
+                                <label>Student Name</label>
+                                <span>{{ $record->last_name }}, {{ $record->first_name }} {{ $record->middle_name }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>ID Number</label>
+                                <span>{{ $record->id_no }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Date of Birth</label>
+                                <span>{{ $record->birthdate ? date('F d, Y', strtotime($record->birthdate)) : 'N/A' }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Gender</label>
+                                <span>{{ $record->sex }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Address</label>
+                                <span style="font-size: 0.9rem;">{{ $record->address }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Guardian</label>
+                                <span>{{ $record->guardian_name }} ({{ $record->guardian_contact }})</span>
                             </div>
                         </div>
-                        <div class="field narrow">
-                            <label>Sex</label>
-                            <select name="student_sex">
-                                <option value="" disabled selected>Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
+                        @else
+                        <div style="padding: 1rem; text-align: center; color: var(--text-muted); border: 2px dashed rgba(0,0,0,0.1); border-radius: 12px;">
+                            No active registration record found. Please return to the checklist menu.
                         </div>
-                        <div class="field narrow">
-                            <label>Age</label>
-                            <input type="number" name="student_age" placeholder="Age">
+                        @endif
+                    </div>
+
+                    <!-- Educational Background & Enrollment Details -->
+                    <div class="section-card" id="section-enrollment">
+                        <div class="section-title">Educational Background & Enrollment Details</div>
+                        
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="is_balik_aral" id="is_balik_aral" {{ $record && $record->is_balik_aral ? 'checked' : '' }}>
+                                <span>Balik Aral</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="is_senior_high" id="is_senior_high" {{ $record && $record->is_senior_high ? 'checked' : '' }}>
+                                <span>Senior High</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="is_freshman" id="is_freshman" {{ $record && $record->is_freshman ? 'checked' : '' }}>
+                                <span>Freshman</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="is_transferee" id="is_transferee" {{ $record && $record->is_transferee ? 'checked' : '' }}>
+                                <span>Transferee</span>
+                            </label>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field">
+                                <label>Grade Level</label>
+                                <select name="grade_level">
+                                    <option value="" disabled {{ !$record || !$record->grade_level ? 'selected' : '' }}>Select Grade</option>
+                                    @foreach(['Kindergarten','Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'] as $gl)
+                                        <option {{ ($record && $record->grade_level == $gl) ? 'selected' : '' }}>{{ $gl }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label>School Year</label>
+                                <input type="text" name="school_year" placeholder="e.g. 2024–2025" value="{{ $record->school_year ?? '' }}">
+                            </div>
+                            <div class="field narrow">
+                                <label>Section</label>
+                                <input type="text" name="section" placeholder="Section" value="{{ $record->section ?? '' }}">
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field">
+                                <label>LRN (If applicable)</label>
+                                <input type="text" name="lrn" placeholder="Enter LRN" value="{{ $record->lrn ?? '' }}">
+                            </div>
+                            <div class="field">
+                                <label>ECS (If applicable)</label>
+                                <input type="text" name="ecs" placeholder="Enter ECS" value="{{ $record->ecs ?? '' }}">
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field">
+                                <label>School last attended</label>
+                                <input type="text" name="last_school_name" placeholder="School Name" value="{{ $record->last_school_name ?? '' }}">
+                            </div>
+                            <div class="field narrow">
+                                <label>Last SY</label>
+                                <input type="text" name="last_school_year" placeholder="2023-2024" value="{{ $record->last_school_year ?? '' }}">
+                            </div>
+                            <div class="field narrow">
+                                <label>School ID</label>
+                                <input type="text" name="school_id" placeholder="School ID" value="{{ $record->school_id ?? '' }}">
+                            </div>
+                        </div>
+
+                        <div class="field-row">
+                            <div class="field">
+                                <label>Strand</label>
+                                <input type="text" name="strand" placeholder="Enter Strand" value="{{ $record->strand ?? '' }}">
+                            </div>
+                            <div class="field">
+                                <label>Semester</label>
+                                <select name="semester">
+                                    <option value="" disabled {{ !$record || !$record->semester ? 'selected' : '' }}>Select Semester</option>
+                                    <option {{ ($record && $record->semester == '1st Semester') ? 'selected' : '' }}>1st Semester</option>
+                                    <option {{ ($record && $record->semester == '2nd Semester') ? 'selected' : '' }}>2nd Semester</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Actions -->
+                    <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
+                        <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Complete Registration</button>
+                    </div>
+
                 </div>
 
-                <!-- Educational Background & Enrollment Details -->
-                <div class="section-card" id="section-enrollment">
-                    <div class="section-title">Educational Background & Enrollment Details</div>
-                    
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="balik_aral">
-                            <span>Balik Aral</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="senior_high">
-                            <span>Senior High</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="freshman">
-                            <span>Freshman</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="transferee">
-                            <span>Transferee</span>
-                        </label>
-                    </div>
+                <!-- Right Column: Credentials -->
+                <div class="section-card">
+                    <div class="section-title">Credentials Check</div>
+                    <div class="credentials-list" id="credentials-container">
+                        @php
+                            $items = [
+                                'Form 138' => 'f138',
+                                'Form 137-A' => 'f137a',
+                                'Good Morale' => 'moral',
+                                'Pictures' => 'pics',
+                                'PSA (Photocopy)' => 'psa',
+                                'Transfer Credentials' => 'transfer',
+                                'Transcript of Records' => 'tor'
+                            ];
+                        @endphp
 
-                    <div class="field-row">
-                        <div class="field">
-                            <label>Grade Level</label>
-                            <select name="grade_level">
-                                <option value="" disabled selected>Select Grade</option>
-                                <option>Kindergarten</option>
-                                <option>Grade 1</option>
-                                <option>Grade 2</option>
-                                <option>Grade 3</option>
-                                <option>Grade 4</option>
-                                <option>Grade 5</option>
-                                <option>Grade 6</option>
-                                <option>Grade 7</option>
-                                <option>Grade 8</option>
-                                <option>Grade 9</option>
-                                <option>Grade 10</option>
-                                <option>Grade 11</option>
-                                <option>Grade 12</option>
-                            </select>
+                        @foreach($items as $label => $key)
+                        <div class="credentials-item">
+                            <span>{{ $label }}</span>
+                            <input type="checkbox" name="credentials[{{ $key }}]" value="true" class="checkbox-custom" {{ ($record && isset($record->credentials[$key]) && $record->credentials[$key] == 'true') ? 'checked' : '' }}>
                         </div>
-                        <div class="field">
-                            <label>School Year</label>
-                            <input type="text" name="school_year" placeholder="e.g. 2024–2025">
-                        </div>
-                        <div class="field narrow">
-                            <label>Section</label>
-                            <input type="text" name="section" placeholder="Section">
-                        </div>
+                        @endforeach
                     </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label>LRN (If applicable)</label>
-                            <input type="text" name="lrn" placeholder="Enter LRN">
-                        </div>
-                        <div class="field">
-                            <label>ECS (If applicable)</label>
-                            <input type="text" name="ecs" placeholder="Enter ECS">
-                        </div>
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label>School last attended</label>
-                            <input type="text" name="last_school_name" placeholder="School Name">
-                        </div>
-                        <div class="field narrow">
-                            <label>Last SY</label>
-                            <input type="text" name="last_school_year" placeholder="2023-2024">
-                        </div>
-                        <div class="field narrow">
-                            <label>School ID</label>
-                            <input type="text" name="school_id" placeholder="School ID">
-                        </div>
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label>Strand</label>
-                            <input type="text" name="strand" placeholder="Enter Strand">
-                        </div>
-                        <div class="field">
-                            <label>Semester</label>
-                            <select name="semester">
-                                <option value="" disabled selected>Select Semester</option>
-                                <option>1st Semester</option>
-                                <option>2nd Semester</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
-                    <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
                 </div>
 
             </div>
-
-            <!-- Right Column: Credentials -->
-            <div class="section-card">
-                <div class="section-title">Credentials Check</div>
-                <div class="credentials-list">
-                    <div class="credentials-item">
-                        <span>Form 138</span>
-                        <input type="checkbox" name="credential_138">
-                    </div>
-                    <div class="credentials-item">
-                        <span>Form 137-A</span>
-                        <input type="checkbox" name="credential_137a">
-                    </div>
-                    <div class="credentials-item">
-                        <span>Good Morale</span>
-                        <input type="checkbox" name="credential_moral">
-                    </div>
-                    <div class="credentials-item">
-                        <span>Pictures</span>
-                        <input type="checkbox" name="credential_pics">
-                    </div>
-                    <div class="credentials-item">
-                        <span>PSA (Photocopy)</span>
-                        <input type="checkbox" name="credential_psa">
-                    </div>
-                    <div class="credentials-item">
-                        <span>Transfer Credentials</span>
-                        <input type="checkbox" name="credential_transfer">
-                    </div>
-                    <div class="credentials-item">
-                        <span>Transcript of Records</span>
-                        <input type="checkbox" name="credential_tor">
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        </form>
 
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const pad = (n) => n < 10 ? '0' + n : n;
-            const dateKey = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
-
-            // ── Custom Datepicker Logic ──
-            let dpMonth = new Date().getMonth();
-            let dpYear = new Date().getFullYear();
-            const dpInput = document.getElementById('input-birthdate');
-            const dpDropdown = document.getElementById('birthdate-datepicker');
-            const dpMonthLabel = document.getElementById('dp-month-label');
-            const dpDaysGrid = document.getElementById('dp-days');
-            const dpPrev = document.getElementById('dp-prev');
-            const dpNext = document.getElementById('dp-next');
-
-            dpInput.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isActive = dpDropdown.classList.toggle('active');
-                
-                // Raise the card z-index
-                const parentCard = dpInput.closest('.section-card');
-                if (isActive) {
-                    parentCard.classList.add('has-open-picker');
-                } else {
-                    parentCard.classList.remove('has-open-picker');
-                }
-
-                if (dpDropdown.classList.contains('active')) {
-                    if (dpInput.value) {
-                        const d = new Date(dpInput.value + 'T00:00:00');
-                        if (!isNaN(d)) {
-                            dpMonth = d.getMonth();
-                            dpYear = d.getFullYear();
-                        }
-                    }
-                    renderDP();
-                }
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!dpDropdown.contains(e.target) && e.target !== dpInput) {
-                    dpDropdown.classList.remove('active');
-                    const parentCard = dpInput.closest('.section-card');
-                    if (parentCard) parentCard.classList.remove('has-open-picker');
-                }
-            });
-
-            function renderDP() {
-                dpMonthLabel.textContent = `${MONTHS[dpMonth]} ${dpYear}`;
-                dpDaysGrid.innerHTML = '';
-
-                const firstDay = new Date(dpYear, dpMonth, 1).getDay();
-                const daysInMonth = new Date(dpYear, dpMonth + 1, 0).getDate();
-                const today = new Date();
-                const selectedStr = dpInput.value;
-
-                for (let i = 0; i < firstDay; i++) {
-                    const empty = document.createElement('div');
-                    dpDaysGrid.appendChild(empty);
-                }
-
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const dayEl = document.createElement('div');
-                    dayEl.className = 'dp-day current';
-                    dayEl.textContent = d;
-
-                    const dayKeyStr = dateKey(dpYear, dpMonth, d);
-                    if (dayKeyStr === selectedStr) dayEl.classList.add('selected');
-                    if (dayKeyStr === dateKey(today.getFullYear(), today.getMonth(), today.getDate())) dayEl.classList.add('today');
-
-                    dayEl.addEventListener('click', () => {
-                        dpInput.value = dayKeyStr;
-                        dpDropdown.classList.remove('active');
-                        dpInput.closest('.section-card').classList.remove('has-open-picker');
-                    });
-
-                    dpDaysGrid.appendChild(dayEl);
-                }
-            }
-
-            dpPrev.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dpMonth--;
-                if (dpMonth < 0) { dpMonth = 11; dpYear--; }
-                renderDP();
-            });
-
-            dpNext.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dpMonth++;
-                if (dpMonth > 11) { dpMonth = 0; dpYear++; }
-                renderDP();
-            });
-
             // ── Dynamic Enrollment Fields Logic ──
             function updateFormStates() {
-                const balikAral = document.querySelector('input[name="balik_aral"]').checked;
-                const seniorHigh = document.querySelector('input[name="senior_high"]').checked;
-                const freshman = document.querySelector('input[name="freshman"]').checked;
-                const transferee = document.querySelector('input[name="transferee"]').checked;
+                const balikAral = document.getElementById('is_balik_aral').checked;
+                const seniorHigh = document.getElementById('is_senior_high').checked;
+                const freshman = document.getElementById('is_freshman').checked;
+                const transferee = document.getElementById('is_transferee').checked;
 
-                let enabledFields = ['grade_level', 'lrn', 'ecs'];
+                let enabledFields = ['grade_level', 'school_year', 'section', 'lrn', 'ecs'];
                 let enableAllContent = false;
                 let enableAllCredentials = false;
 
@@ -614,7 +506,7 @@
                 }
 
                 if (balikAral) {
-                    enabledFields.push('last_school_name', 'school_id');
+                    enabledFields.push('last_school_name', 'last_school_year', 'school_id');
                 }
 
                 if (seniorHigh) {
@@ -627,26 +519,15 @@
                 enrollmentInputs.forEach(input => {
                     if (enableAllContent || enabledFields.includes(input.name)) {
                         input.disabled = false;
+                        input.style.opacity = '1';
                     } else {
                         input.disabled = true;
-                        // Clear out values on disable
+                        input.style.opacity = '0.5';
                         if(input.tagName === 'SELECT') {
                             input.selectedIndex = 0;
                         } else {
                             input.value = '';
                         }
-                    }
-                });
-
-                const credentialsInputs = document.querySelectorAll('.credentials-list input[type="checkbox"]');
-                credentialsInputs.forEach(input => {
-                    if (enableAllCredentials) {
-                        input.disabled = false;
-                        input.closest('.credentials-item').style.opacity = '1';
-                    } else {
-                        input.disabled = true;
-                        input.checked = false;
-                        input.closest('.credentials-item').style.opacity = '0.5';
                     }
                 });
             }

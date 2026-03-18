@@ -33,14 +33,12 @@ Route::get('/checklist', function () {
 })->middleware('auth')->name('checklist');
 
 Route::get('/checklist/lookup-student', [ChecklistController::class, 'lookupStudent'])->middleware('auth')->name('checklist.lookup');
+Route::post('/checklist/save', [ChecklistController::class, 'saveChecklist'])->middleware('auth')->name('checklist.save');
+Route::post('/checklist/finish-basic', [ChecklistController::class, 'finishBasicEducation'])->middleware('auth')->name('checklist.finish.basic');
+Route::post('/checklist/finish-collegiate', [ChecklistController::class, 'finishCollegiate'])->middleware('auth')->name('checklist.finish.collegiate');
 
-Route::get('/basic-education', function () {
-    return view('forms.basic_education');
-})->middleware('auth')->name('basic_education');
-
-Route::get('/collegiate', function () {
-    return view('forms.collegiate');
-})->middleware('auth')->name('collegiate');
+Route::get('/basic-education', [ChecklistController::class, 'basicEducationForm'])->middleware('auth')->name('basic_education');
+Route::get('/collegiate', [ChecklistController::class, 'collegiateForm'])->middleware('auth')->name('collegiate');
 
 Route::get('/basic-education-records', function () {
     return view('records.basic_education_records');

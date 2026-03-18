@@ -465,8 +465,8 @@
 
         <!-- Actions -->
         <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
-            <a href="{{ route('basic_education') }}" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Basic Education</a>
-            <a href="{{ route('collegiate') }}" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Collegiate &amp; Graduate Studies</a>
+            <a href="{{ route('basic_education') }}" id="btn-basic-ed" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Basic Education</a>
+            <a href="{{ route('collegiate') }}" id="btn-collegiate" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Collegiate &amp; Graduate Studies</a>
         </div>
 
     </main>
@@ -587,7 +587,64 @@
             }, 400);
         });
 
-        // Datepicker Logic
+        // ── Save-then-redirect logic ──────────────────────────────────────────
+        const btnBasicEd   = document.getElementById('btn-basic-ed');
+        const btnCollegiate = document.getElementById('btn-collegiate');
+
+        async function saveAndRedirect(e, el, category) {
+            e.preventDefault();
+            const idVal = (idInput.value || '').trim();
+            const target = el.href;
+
+            if (idVal.length > 0) {
+                const origText = el.innerText;
+                el.innerText = 'Saving…';
+                el.style.pointerEvents = 'none';
+
+                try {
+                    const response = await fetch('{{ route("checklist.save") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id_no:             idVal,
+                            last_name:         document.getElementById('student_last_name')?.value   || '',
+                            first_name:        document.getElementById('student_first_name')?.value  || '',
+                            middle_name:       document.getElementById('student_middle_name')?.value || '',
+                            birthdate:         document.getElementById('checklist-input-date')?.value || '',
+                            sex:               document.getElementById('student_sex')?.value  || '',
+                            age:               document.getElementById('student_age')?.value  || '',
+                            father_name:       document.getElementById('father_full_name')?.value    || '',
+                            mother_name:       document.getElementById('mother_full_name')?.value    || '',
+                            guardian_name:     document.getElementById('guardian_full_name')?.value  || '',
+                            guardian_contact:  document.getElementById('guardian_contact')?.value    || '',
+                            address:           document.getElementById('student_address')?.value     || '',
+                            category:          category
+                        })
+                    });
+
+                    const resData = await response.json();
+                    if (resData.status === 'success' && resData.id) {
+                        window.location.href = `${target}?reg_id=${resData.id}`;
+                        return;
+                    }
+                } catch (err) {
+                    console.error('Checklist save failed:', err);
+                    el.innerText = origText;
+                    el.style.pointerEvents = '';
+                }
+            }
+
+            window.location.href = target;
+        }
+
+        if (btnBasicEd)    btnBasicEd.addEventListener('click',    e => saveAndRedirect(e, btnBasicEd,    'basic_education'));
+        if (btnCollegiate) btnCollegiate.addEventListener('click', e => saveAndRedirect(e, btnCollegiate, 'cg_studies'));
+
+        // ─────────────────────────────────────────────────────────────────────
         const dpMONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         function pad(n) { return n < 10 ? '0' + n : '' + n; }
         function dateKey(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }

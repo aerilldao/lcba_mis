@@ -258,6 +258,28 @@
         .dp-day.selected { background: var(--primary-color); color: #fff; }
         .dp-day.today { color: var(--primary-color); position: relative; }
         .dp-day.today::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--primary-color); }
+
+        .display-field { display: flex; flex-direction: column; gap: 0.25rem; }
+        .display-field label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .display-field span { font-size: 1.05rem; color: var(--primary-text-heading); font-weight: 700; }
+        .student-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+
+        .credentials-item {
+            display: grid;
+            grid-template-columns: 1fr 100px;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background 0.3s;
+        }
+        .credentials-item:hover { background: rgba(0,0,0,0.02); }
+        .credentials-status { display: flex; gap: 0.5rem; justify-content: flex-end; }
+        .checkbox-custom {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
     </style>
 </head>
 <body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
@@ -272,360 +294,184 @@
     <!-- Sub Navbar -->
     <div class="sub-navbar">
         <span>Collegiate &amp; Graduate Studies — Student Records</span>
-    </div>
-
-    <!-- Main Content -->
+    </div>    <!-- Main Content -->
     <main class="checklist-content">
 
-        <!-- Student Information -->
-        <div class="section-card" id="section-student">
-            <div class="section-title">Student Information</div>
-            <div class="field-row">
-                <div class="field wide">
-                    <label>Last Name</label>
-                    <input type="text" name="student_last_name" placeholder="Last Name">
-                </div>
-                <div class="field wide">
-                    <label>First Name</label>
-                    <input type="text" name="student_first_name" placeholder="First Name">
-                </div>
-                <div class="field medium">
-                    <label>Middle Name</label>
-                    <input type="text" name="student_middle_name" placeholder="Middle Name">
-                </div>
-                <div class="field narrow">
-                    <label>Suffix</label>
-                    <input type="text" name="student_suffix" placeholder="Jr., III, etc.">
-                </div>
-                <div class="field medium" style="position: relative;">
-                    <label>Birthdate</label>
-                    <input type="text" name="student_birthdate" id="input-birthdate" placeholder="Select birthdate" readonly style="cursor: pointer;">
-                    <div class="datepicker-dropdown" id="birthdate-datepicker">
-                        <div class="dp-header">
-                            <div class="dp-month" id="dp-month-label">March 2026</div>
-                            <div class="dp-nav">
-                                <button type="button" class="dp-nav-btn" id="dp-prev">←</button>
-                                <button type="button" class="dp-nav-btn" id="dp-next">→</button>
+        <form action="{{ route('checklist.finish.collegiate') }}" method="POST">
+            @csrf
+            <input type="hidden" name="reg_id" value="{{ $record->id ?? '' }}">
+
+            <div class="layout-grid">
+                
+                <!-- Left Column -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    
+                    <!-- Student Information (Display Card) -->
+                    <div class="section-card" id="section-student" style="background: linear-gradient(145deg, var(--card-bg), rgba(30, 58, 138, 0.03));">
+                        <div class="section-title">Student Registration Data</div>
+                        
+                        @if($record)
+                        <div class="student-info-grid">
+                            <div class="display-field">
+                                <label>Student Name</label>
+                                <span>{{ $record->last_name }}, {{ $record->first_name }} {{ $record->middle_name }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>ID Number</label>
+                                <span>{{ $record->id_no }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Date of Birth</label>
+                                <span>{{ $record->birthdate ? date('F d, Y', strtotime($record->birthdate)) : 'N/A' }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Gender</label>
+                                <span>{{ $record->sex }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Address</label>
+                                <span style="font-size: 0.9rem;">{{ $record->address }}</span>
+                            </div>
+                            <div class="display-field">
+                                <label>Guardian</label>
+                                <span>{{ $record->guardian_name }} ({{ $record->guardian_contact }})</span>
                             </div>
                         </div>
-                        <div class="dp-grid">
-                            <div class="dp-weekday">Su</div>
-                            <div class="dp-weekday">Mo</div>
-                            <div class="dp-weekday">Tu</div>
-                            <div class="dp-weekday">We</div>
-                            <div class="dp-weekday">Th</div>
-                            <div class="dp-weekday">Fr</div>
-                            <div class="dp-weekday">Sa</div>
+                        @else
+                        <div style="padding: 1rem; text-align: center; color: var(--text-muted); border: 2px dashed rgba(0,0,0,0.1); border-radius: 12px;">
+                            No active registration record found.
                         </div>
-                        <div class="dp-grid" id="dp-days"></div>
+                        @endif
                     </div>
-                </div>
-                <div class="field narrow">
-                    <label>Sex</label>
-                    <select name="student_sex">
-                        <option value="" disabled selected>Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div class="field narrow">
-                    <label>Age</label>
-                    <input type="number" name="student_age" placeholder="Age">
-                </div>
-            </div>
-        </div>
 
-        <!-- Program & Year Level -->
-        <div class="section-card" id="section-program">
-            <div class="section-title">Program & Year Level</div>
-            <div class="field-row">
-                <div class="field xwide">
-                    <label>Program / Course</label>
-                    <input type="text" name="program" placeholder="e.g. BS Computer Science">
-                </div>
-                <div class="field wide">
-                    <label>Year Level</label>
-                    <select name="year_level">
-                        <option value="" disabled selected>Select Year</option>
-                        <option>1st Year</option>
-                        <option>2nd Year</option>
-                        <option>3rd Year</option>
-                        <option>4th Year</option>
-                        <option>5th Year</option>
-                        <option>Graduate / Masteral</option>
-                        <option>Doctoral</option>
-                    </select>
-                </div>
-                <div class="field medium">
-                    <label>School Year</label>
-                    <input type="text" name="school_year" placeholder="e.g. 2024–2025">
-                </div>
-                <div class="field narrow">
-                    <label>Semester</label>
-                    <select name="semester">
-                        <option value="" disabled selected>Select</option>
-                        <option>1st Semester</option>
-                        <option>2nd Semester</option>
-                        <option>Summer</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+                    <!-- Program & Year Level -->
+                    <div class="section-card" id="section-program">
+                        <div class="section-title">Program & Year Level</div>
 
-        <!-- Credentials Check -->
-        <div class="section-card" id="section-credentials">
-            <div class="section-title">Credentials Check</div>
-            <div class="field-row">
-                <div class="field medium">
-                    <label>Student Category</label>
-                    <select name="student_category" id="student_category">
-                        <option value="" disabled selected>Select Category</option>
-                        <option value="college_studies">College Studies</option>
-                        <option value="graduate_studies">Graduate Studies</option>
-                        <option value="cross_enrollee">Cross - Enrollee</option>
-                    </select>
-                </div>
-                <div class="field medium" id="sub_category_container" style="display: none;">
-                    <label id="sub_category_label">Student Sub-Category</label>
-                    <select name="student_sub_category" id="student_sub_category">
-                        <!-- Populated by JS -->
-                    </select>
-                </div>
-            </div>
-            
-            <div id="credentials_container" style="display: none; margin-top: 1.5rem;">
-                <label style="font-weight: 600; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Credentials Submitted (Check):</label>
-                <div class="credentials-list" id="credentials_list">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </div>
+                        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" name="is_freshman" id="is_freshman" {{ $record && $record->is_freshman ? 'checked' : '' }}>
+                                <span>Freshman</span>
+                            </label>
+                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" name="is_transferee" id="is_transferee" {{ $record && $record->is_transferee ? 'checked' : '' }}>
+                                <span>Transferee</span>
+                            </label>
+                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" name="is_cross_enrollee" id="is_cross_enrollee" {{ $record && $record->is_cross_enrollee ? 'checked' : '' }}>
+                                <span>Cross-Enrollee</span>
+                            </label>
+                            <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" name="is_returnee" id="is_returnee" {{ $record && $record->is_returnee ? 'checked' : '' }}>
+                                <span>Returnee</span>
+                            </label>
+                        </div>
 
-        <!-- Approval Route -->
-        <div class="section-card" id="section-approval">
-            <div class="section-title">Approval Route</div>
-            <div class="credentials-list">
-                <div class="credentials-item">
-                    <span>Registrar (For Credential)</span>
-                    <input type="checkbox" name="approval_registrar">
-                </div>
-                <div class="credentials-item">
-                    <span>Guidance Counselor (For Assessment / Interview)</span>
-                    <input type="checkbox" name="approval_guidance">
-                </div>
-                <div class="credentials-item">
-                    <span>Dean / Program Chair (For Approval)</span>
-                    <input type="checkbox" name="approval_dean">
-                </div>
-            </div>
-        </div>
+                        <div class="field-row" style="margin-bottom: 1.5rem;">
+                            <div class="field xwide">
+                                <label>Program / Course</label>
+                                <input type="text" name="course" placeholder="e.g. BS Computer Science" value="{{ $record->course ?? '' }}">
+                            </div>
+                            <div class="field wide">
+                                <label>Major (If applicable)</label>
+                                <input type="text" name="major" placeholder="Major" value="{{ $record->major ?? '' }}">
+                            </div>
+                        </div>
 
-        <!-- Actions -->
-        <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
-            <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Save Information</button>
-        </div>
+                        <div class="field-row">
+                            <div class="field wide">
+                                <label>Year Level</label>
+                                <select name="year_level">
+                                    <option value="" disabled {{ !$record || !$record->year_level ? 'selected' : '' }}>Select Year</option>
+                                    @foreach(['1st Year','2nd Year','3rd Year','4th Year','5th Year','Graduate / Masteral'] as $yl)
+                                        <option {{ ($record && $record->year_level == $yl) ? 'selected' : '' }}>{{ $yl }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="field medium">
+                                <label>School Year</label>
+                                <input type="text" name="school_year" placeholder="e.g. 2024–2025" value="{{ $record->school_year ?? '' }}">
+                            </div>
+                            <div class="field narrow">
+                                <label>Semester</label>
+                                <select name="semester">
+                                    <option value="" disabled {{ !$record || !$record->semester ? 'selected' : '' }}>Select</option>
+                                    @foreach(['1st Semester','2nd Semester','Summer'] as $sem)
+                                        <option {{ ($record && $record->semester == $sem) ? 'selected' : '' }}>{{ $sem }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="field narrow">
+                                <label>Section</label>
+                                <input type="text" name="section" placeholder="Section" value="{{ $record->section ?? '' }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
+                        <button type="submit" class="btn-login" style="padding: 0.8rem 3rem;">Complete Registration</button>
+                    </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    
+                    <div class="section-card">
+                        <div class="section-title">Credentials Check</div>
+                        <div class="credentials-list" id="credentials-container">
+                            @php
+                                $items = [
+                                    'Honorable Dismissal' => 'honorable',
+                                    'Transcript of Records' => 'tor',
+                                    'Certificate of Good Moral' => 'moral',
+                                    'Pictures (2x2)' => 'pics',
+                                    'PSA Birth Certificate' => 'psa',
+                                    'Marriage Contract' => 'marriage',
+                                    'Permit to Cross Enroll' => 'cross_permit'
+                                ];
+                            @endphp
+
+                            @foreach($items as $label => $key)
+                            <div class="credentials-item">
+                                <span>{{ $label }}</span>
+                                <input type="checkbox" name="credentials[{{ $key }}]" value="true" class="checkbox-custom" {{ ($record && isset($record->credentials[$key]) && $record->credentials[$key] == 'true') ? 'checked' : '' }}>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-title">Approval Route</div>
+                        <div class="credentials-list">
+                            @php
+                                $approvals = [
+                                    'Registrar' => 'registrar',
+                                    'Guidance' => 'guidance',
+                                    'Dean / Program Chair' => 'dean'
+                                ];
+                            @endphp
+                            @foreach($approvals as $lbl => $ak)
+                            <div class="credentials-item">
+                                <span>{{ $lbl }}</span>
+                                <input type="checkbox" name="approvals[{{ $ak }}]" value="true" class="checkbox-custom" {{ ($record && isset($record->approvals[$ak]) && $record->approvals[$ak] == 'true') ? 'checked' : '' }}>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
 
     </main>
 
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const pad = (n) => n < 10 ? '0' + n : n;
-            const dateKey = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
-
-            // ── Custom Datepicker Logic ──
-            let dpMonth = new Date().getMonth();
-            let dpYear = new Date().getFullYear();
-            const dpInput = document.getElementById('input-birthdate');
-            const dpDropdown = document.getElementById('birthdate-datepicker');
-            const dpMonthLabel = document.getElementById('dp-month-label');
-            const dpDaysGrid = document.getElementById('dp-days');
-            const dpPrev = document.getElementById('dp-prev');
-            const dpNext = document.getElementById('dp-next');
-
-            dpInput.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isActive = dpDropdown.classList.toggle('active');
-                
-                // Raise the card z-index
-                const parentCard = dpInput.closest('.section-card');
-                if (isActive) {
-                    parentCard.classList.add('has-open-picker');
-                } else {
-                    parentCard.classList.remove('has-open-picker');
-                }
-
-                if (dpDropdown.classList.contains('active')) {
-                    if (dpInput.value) {
-                        const d = new Date(dpInput.value + 'T00:00:00');
-                        if (!isNaN(d)) {
-                            dpMonth = d.getMonth();
-                            dpYear = d.getFullYear();
-                        }
-                    }
-                    renderDP();
-                }
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!dpDropdown.contains(e.target) && e.target !== dpInput) {
-                    dpDropdown.classList.remove('active');
-                    dpInput.closest('.section-card').classList.remove('has-open-picker');
-                }
-            });
-
-            function renderDP() {
-                dpMonthLabel.textContent = `${MONTHS[dpMonth]} ${dpYear}`;
-                dpDaysGrid.innerHTML = '';
-
-                const firstDay = new Date(dpYear, dpMonth, 1).getDay();
-                const daysInMonth = new Date(dpYear, dpMonth + 1, 0).getDate();
-                const today = new Date();
-                const selectedStr = dpInput.value;
-
-                for (let i = 0; i < firstDay; i++) {
-                    const empty = document.createElement('div');
-                    dpDaysGrid.appendChild(empty);
-                }
-
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const dayEl = document.createElement('div');
-                    dayEl.className = 'dp-day current';
-                    dayEl.textContent = d;
-
-                    const dayKeyStr = dateKey(dpYear, dpMonth, d);
-                    if (dayKeyStr === selectedStr) dayEl.classList.add('selected');
-                    if (dayKeyStr === dateKey(today.getFullYear(), today.getMonth(), today.getDate())) dayEl.classList.add('today');
-
-                    dayEl.addEventListener('click', () => {
-                        dpInput.value = dayKeyStr;
-                        dpDropdown.classList.remove('active');
-                        dpInput.closest('.section-card').classList.remove('has-open-picker');
-                    });
-
-                    dpDaysGrid.appendChild(dayEl);
-                }
-            }
-
-            dpPrev.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dpMonth--;
-                if (dpMonth < 0) { dpMonth = 11; dpYear--; }
-                renderDP();
-            });
-
-            dpNext.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dpMonth++;
-                if (dpMonth > 11) { dpMonth = 0; dpYear++; }
-                renderDP();
-            });
-
-            // ── Dynamic Credentials Category Logic ──
-            const selCat = document.getElementById('student_category');
-            const subCatContainer = document.getElementById('sub_category_container');
-            const selSubCat = document.getElementById('student_sub_category');
-            const subCatLabel = document.getElementById('sub_category_label');
-            const credContainer = document.getElementById('credentials_container');
-            const credList = document.getElementById('credentials_list');
-
-            const credentialSets = {
-                college_freshman: [
-                    'Form 138 (Card)',
-                    'Form 137-A (If Available)',
-                    'Certificate of Good Moral Character',
-                    'Pictures (2x2)',
-                    'PSA Birth Certificate (Photocopy)',
-                    'PSA Marriage Contract (If Married)',
-                    'Others'
-                ],
-                college_transferee: [
-                    'Transfer Credential / Honorable Dismissal',
-                    'Certificate of Good Moral Character',
-                    'Pictures (2x2)',
-                    'PSA Birth Certificate (Photocopy)',
-                    'PSA Marriage Certificate (If Married)',
-                    'Others'
-                ],
-                graduate_studies: [
-                    'Transfer Credentials / Honorable Dismissal',
-                    'Pictures (2x2)',
-                    'PSA Birth Certificate (Photocopy)',
-                    'PSA Marriage Contract (If Married)',
-                    'Transcript of Records (Copy for LCBA)'
-                ],
-                cross_enrollee: [
-                    'Permit to Cross Enroll',
-                    '1 Picture (2x2)',
-                    'School ID (Photocopy)',
-                    { label: 'Others (Indicate)', type: 'text' }
-                ]
-            };
-
-            function renderChecklist(items) {
-                credList.innerHTML = '';
-                if (!items) {
-                    credContainer.style.display = 'none';
-                    return;
-                }
-                
-                items.forEach((item, index) => {
-                    const rowContainer = document.createElement('div');
-                    rowContainer.className = 'credentials-item';
-                    
-                    const labelSpan = document.createElement('span');
-                    
-                    if (typeof item === 'object' && item.type === 'text') {
-                        labelSpan.innerHTML = `${item.label} <input type="text" class="inline-input" placeholder="...">`;
-                    } else {
-                        labelSpan.textContent = item;
-                    }
-                    
-                    const checkBox = document.createElement('input');
-                    checkBox.type = 'checkbox';
-                    checkBox.name = `credential_${index}`;
-                    
-                    rowContainer.appendChild(labelSpan);
-                    rowContainer.appendChild(checkBox);
-                    credList.appendChild(rowContainer);
-                });
-
-                credContainer.style.display = 'block';
-            }
-
-            selCat.addEventListener('change', (e) => {
-                const val = e.target.value;
-                selSubCat.innerHTML = '';
-                subCatContainer.style.display = 'none';
-                credContainer.style.display = 'none';
-                
-                if (val === 'college_studies') {
-                    subCatLabel.textContent = 'Entering Freshman/Transferee';
-                    selSubCat.innerHTML = `
-                        <option value="" disabled selected>Select</option>
-                        <option value="freshman">For Entering Freshman</option>
-                        <option value="transferee">Transferee</option>
-                    `;
-                    subCatContainer.style.display = 'flex';
-                } else if (val === 'graduate_studies') {
-                    renderChecklist(credentialSets.graduate_studies);
-                } else if (val === 'cross_enrollee') {
-                    renderChecklist(credentialSets.cross_enrollee);
-                }
-            });
-
-            selSubCat.addEventListener('change', (e) => {
-                const catVal = selCat.value;
-                const subVal = e.target.value;
-
-                if (catVal === 'college_studies') {
-                    if (subVal === 'freshman') renderChecklist(credentialSets.college_freshman);
-                    if (subVal === 'transferee') renderChecklist(credentialSets.college_transferee);
-                }
-            });
-        });
+        // setStatus logic removed
     </script>
 </body>
 </html>
