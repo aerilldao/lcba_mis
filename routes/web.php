@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperUserController;
+use App\Http\Controllers\RecordController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,10 +41,5 @@ Route::post('/checklist/finish-collegiate', [ChecklistController::class, 'finish
 Route::get('/basic-education', [ChecklistController::class, 'basicEducationForm'])->middleware('auth')->name('basic_education');
 Route::get('/collegiate', [ChecklistController::class, 'collegiateForm'])->middleware('auth')->name('collegiate');
 
-Route::get('/basic-education-records', function () {
-    return view('records.basic_education_records');
-})->middleware('auth')->name('basic_education_records');
-
-Route::get('/collegiate-records', function () {
-    return view('records.collegiate_records');
-})->middleware('auth')->name('collegiate_records');
+Route::get('/basic-education-records', [RecordController::class, 'basicEducationRecords'])->middleware('auth')->name('basic_education_records');
+Route::get('/collegiate-records', [RecordController::class, 'collegiateRecords'])->middleware('auth')->name('collegiate_records');
