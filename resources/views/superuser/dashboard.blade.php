@@ -442,6 +442,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     <input type="text" placeholder="Search system users...">
                 </div>
+                <a href="{{ route('dashboard') }}" class="btn-create" style="background: rgba(167, 139, 250, 0.2); color: var(--super-primary); border: 1px solid rgba(167,139,250,0.4);">System Calendar</a>
                 <a href="javascript:void(0)" class="btn-create" onclick="openCreateUserModal()">Add User</a>
                 <button class="action-icon-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -558,8 +559,6 @@
                                     <button class="action-icon-btn" title="Edit User" onclick="openEditUserModal({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ $user->email }}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                                     </button>
-                                    <button class="action-icon-btn" title="User Events" onclick="openUserEventsModal({{ $user->id }}, '{{ addslashes($user->name) }}')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                     </button>
                                     @if($user->email !== 'SUPERUSER')
                                     <button class="action-icon-btn" title="Log Out User" style="color: #ef4444; background: rgba(239, 68, 68, 0.1);" onclick="killUserSession({{ $user->id }}, '{{ addslashes($user->name) }}')">
@@ -641,18 +640,6 @@
         </div>
     </div>
 
-    <!-- User Events Modal -->
-    <div class="modal-overlay" id="user-events-modal">
-        <div class="modal-card" style="max-width: 650px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
-                <h2 style="font-size: 1.75rem; font-weight: 800;" id="events-modal-title">User Events</h2>
-                <button class="action-icon-btn" onclick="closeModal('user-events-modal')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            </div>
-            <div id="event-list-container" style="max-height: 400px; overflow-y: auto;">
-                <!-- Events will be loaded here -->
-            </div>
-        </div>
-    </div>
 
     <!-- System Audit Modal -->
     <div class="modal-overlay" id="audit-modal">
@@ -770,51 +757,6 @@
             });
         }
 
-        function openUserEventsModal(id, name) {
-            document.getElementById('events-modal-title').textContent = `${name}'s Registered Events`;
-            const container = document.getElementById('event-list-container');
-            container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Accessing institution logs...</p>';
-            
-            document.getElementById('user-events-modal').classList.add('active');
-
-            fetch(`/superuser/users/${id}/events`)
-            .then(res => res.json())
-            .then(events => {
-                if(events.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">No records found for this identity.</div>';
-                    return;
-                }
-
-                container.innerHTML = events.map(event => `
-                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 1.25rem; border-radius: 16px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-weight: 800; font-size: 1rem; color: #fff;">${event.title}</div>
-                            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">
-                                ${event.event_date} ${event.event_time || ''}
-                            </div>
-                        </div>
-                        <button class="action-icon-btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;" onclick="deleteAdminEvent(${event.id})">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
-                    </div>
-                `).join('');
-            });
-        }
-
-        function deleteAdminEvent(id) {
-            if(!confirm('Confirm event deletion?')) return;
-            
-            fetch(`/superuser/events/${id}`, {
-                method: 'DELETE',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === 'success') {
-                    location.reload();
-                }
-            });
-        }
 
         function killUserSession(id, name) {
             if(!confirm(`Are you sure you want to log out ${name}? They will be instantly disconnected from their active session.`)) return;

@@ -34,7 +34,10 @@ class DashboardController extends Controller
         ]);
 
         // Local Events
-        $events = CalendarEvent::where('user_id', Auth::id())
+        $events = CalendarEvent::where(function($query) {
+                $query->where('user_id', Auth::id())
+                      ->orWhere('is_global', true);
+            })
             ->whereMonth('event_date', $request->month)
             ->whereYear('event_date', $request->year)
             ->orderBy('event_date')
@@ -102,6 +105,7 @@ class DashboardController extends Controller
             'event_date' => $request->event_date,
             'event_time' => $request->event_time,
             'color' => $request->color ?? '#3b82f6',
+            'is_global' => Auth::user()->email === 'SUPERUSER' ? filter_var($request->input('is_global'), FILTER_VALIDATE_BOOLEAN) : false,
         ]);
 
         return response()->json($event, 201);
@@ -109,7 +113,7 @@ class DashboardController extends Controller
 
     public function updateEvent(Request $request, CalendarEvent $event)
     {
-        if ($event->user_id !== Auth::id()) {
+        if ($event->user_id !== Auth::id() && Auth::user()->email !== 'SUPERUSER') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -121,14 +125,19 @@ class DashboardController extends Controller
             'color' => 'nullable|string|max:20',
         ]);
 
-        $event->update($request->only(['title', 'description', 'event_date', 'event_time', 'color']));
+        $data = $request->only(['title', 'description', 'event_date', 'event_time', 'color']);
+        if (Auth::user()->email === 'SUPERUSER') {
+            $data['is_global'] = filter_var($request->input('is_global'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $event->update($data);
 
         return response()->json($event);
     }
 
     public function deleteEvent(CalendarEvent $event)
     {
-        if ($event->user_id !== Auth::id()) {
+        if ($event->user_id !== Auth::id() && Auth::user()->email !== 'SUPERUSER') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

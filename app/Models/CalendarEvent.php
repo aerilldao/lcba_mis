@@ -14,6 +14,7 @@ class CalendarEvent extends Model
         'event_date',
         'event_time',
         'color',
+        'is_global',
     ];
 
     protected function casts(): array

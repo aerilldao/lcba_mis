@@ -482,6 +482,12 @@
                         <div class="cal-color-option" data-color="#0ea5e9" style="background: #0ea5e9;" title="Cyan"></div>
                     </div>
                 </div>
+                @if(auth()->check() && auth()->user()->email === 'SUPERUSER')
+                <div class="cal-modal-field" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                    <input type="checkbox" id="cal-input-global" style="width: auto; padding: 0;">
+                    <label for="cal-input-global" style="margin: 0; color: #f59e0b; cursor: pointer;">Global Event (Visible to all users)</label>
+                </div>
+                @endif
                 <div class="cal-modal-actions">
                     <button class="cal-btn cal-btn-secondary" id="cal-modal-cancel">Cancel</button>
                     <button class="cal-btn cal-btn-primary" id="cal-modal-save">Save</button>
@@ -522,6 +528,8 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const currentUserId = {{ auth()->id() ?? 'null' }};
+        const isSuperUser = {{ (auth()->check() && auth()->user()->email === 'SUPERUSER') ? 'true' : 'false' }};
         const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
         let currentMonth = new Date().getMonth();
@@ -710,6 +718,11 @@
                 el.classList.toggle('selected', el.dataset.color === selectedColor);
             });
 
+            const globalCheckbox = document.getElementById('cal-input-global');
+            if(globalCheckbox) {
+                globalCheckbox.checked = event ? !!event.is_global : false;
+            }
+
             eventModal.classList.add('active');
             setTimeout(() => inputTitle.focus(), 100);
         }
@@ -757,6 +770,11 @@
                 event_time: finalTime,
                 color: selectedColor,
             };
+
+            const globalCheckbox = document.getElementById('cal-input-global');
+            if (globalCheckbox) {
+                payload.is_global = globalCheckbox.checked;
+            }
 
             try {
                 let url, method;
@@ -815,9 +833,11 @@
                             <div class="cal-event-item-actions">
                                 ${isGoogle ? `
                                     <a href="${ev.htmlLink}" target="_blank" class="cal-event-action-btn" style="text-decoration: none; background: #4285F4; color: white;">View in Google Calendar</a>
-                                ` : `
+                                ` : (ev.user_id === currentUserId || isSuperUser) ? `
                                     <button class="cal-event-action-btn cal-event-edit-btn" data-id="${ev.id}">Edit</button>
                                     <button class="cal-event-action-btn cal-event-delete-btn" data-id="${ev.id}">Delete</button>
+                                ` : `
+                                    <span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">System Event</span>
                                 `}
                             </div>
                         </div>

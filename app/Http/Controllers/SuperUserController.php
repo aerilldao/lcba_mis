@@ -74,35 +74,7 @@ class SuperUserController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function getUserEvents(User $user)
-    {
-        $events = CalendarEvent::where('user_id', $user->id)
-            ->orderBy('event_date', 'desc')
-            ->get();
-            
-        return response()->json($events);
-    }
 
-    public function updateAdminEvent(Request $request, CalendarEvent $event)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'event_date' => 'required|date',
-            'event_time' => 'nullable|date_format:H:i',
-            'color' => 'nullable|string|max:20',
-        ]);
-
-        $event->update($request->only(['title', 'description', 'event_date', 'event_time', 'color']));
-
-        return response()->json(['status' => 'success', 'event' => $event]);
-    }
-
-    public function deleteAdminEvent(CalendarEvent $event)
-    {
-        $event->delete();
-        return response()->json(['status' => 'success']);
-    }
 
     public function killSession(User $user)
     {
