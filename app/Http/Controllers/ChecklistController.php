@@ -38,6 +38,11 @@ class ChecklistController extends Controller
             'date_of_birth' => $s['date_of_birth'] ?? '',
             'sex'           => $s['sex']           ?? '',
             'age'           => $s['age']           ?? '',
+            'father_name'   => $s['father_name']   ?? '',
+            'mother_name'   => $s['mother_name']   ?? '',
+            'guardian_name' => $s['guardian_name'] ?? '',
+            'guardian_contact' => $s['guardian_contact'] ?? '',
+            'address' => $s['address'] ?? '',
         ]);
     }
 }

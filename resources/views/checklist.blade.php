@@ -420,7 +420,7 @@
                 <div class="field-row">
                     <div class="field xwide">
                         <label>Full Name (Last Name, First Name, Middle Name, Suffix)</label>
-                        <input type="text" name="father_full_name" placeholder="e.g. Dela Cruz, Juan Santos Jr." disabled>
+                        <input type="text" id="father_full_name" name="father_full_name" placeholder="e.g. Dela Cruz, Juan Santos Jr." disabled>
                     </div>
                 </div>
             </div>
@@ -431,7 +431,7 @@
                 <div class="field-row">
                     <div class="field xwide">
                         <label>Full Name (Last Name, First Name, Middle Name, Suffix)</label>
-                        <input type="text" name="mother_full_name" placeholder="e.g. Dela Cruz, Maria Santos" disabled>
+                        <input type="text" id="mother_full_name" name="mother_full_name" placeholder="e.g. Dela Cruz, Maria Santos" disabled>
                     </div>
                 </div>
             </div>
@@ -442,11 +442,11 @@
                 <div class="field-row">
                     <div class="field xwide">
                         <label>Full Name (Last Name, First Name, Middle Name, Suffix)</label>
-                        <input type="text" name="guardian_full_name" placeholder="e.g. Dela Cruz, Pedro Santos" disabled>
+                        <input type="text" id="guardian_full_name" name="guardian_full_name" placeholder="e.g. Dela Cruz, Pedro Santos" disabled>
                     </div>
                     <div class="field medium">
                         <label>Contact Number</label>
-                        <input type="text" name="guardian_contact" placeholder="Contact Number" disabled>
+                        <input type="text" id="guardian_contact" name="guardian_contact" placeholder="Contact Number" disabled>
                     </div>
                 </div>
             </div>
@@ -455,33 +455,9 @@
             <div class="sub-section section-locked" id="section-address">
                 <div class="section-subtitle">Address Information</div>
                 <div class="field-row">
-                    <div class="field narrow">
-                        <label>House No.</label>
-                        <input type="text" name="house_no" placeholder="House No." disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Street Name</label>
-                        <input type="text" name="street_name" placeholder="Street Name" disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Barangay</label>
-                        <input type="text" name="barangay" placeholder="Barangay" disabled>
-                    </div>
-                    <div class="field narrow">
-                        <label>Zip Code</label>
-                        <input type="text" name="zip_code" placeholder="Zip Code" disabled>
-                    </div>
                     <div class="field xwide">
-                        <label>Municipality / City</label>
-                        <input type="text" name="municipality_city" placeholder="Municipality / City" disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Province</label>
-                        <input type="text" name="province" placeholder="Province" disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Country</label>
-                        <input type="text" name="country" value="Philippines" disabled>
+                        <label>Full Address (House No., Street, Barangay, City, Province, Zip)</label>
+                        <input type="text" id="student_address" name="student_address" placeholder="e.g. 123 Main St, Brgy. Central, Manila, Metro Manila, 1000" disabled>
                     </div>
                 </div>
             </div>
@@ -539,6 +515,11 @@
             document.getElementById('checklist-input-date').value = '';
             document.getElementById('student_sex').value = '';
             document.getElementById('student_age').value = '';
+            document.getElementById('father_full_name').value = '';
+            document.getElementById('mother_full_name').value = '';
+            document.getElementById('guardian_full_name').value = '';
+            document.getElementById('guardian_contact').value = '';
+            document.getElementById('student_address').value = '';
         }
 
         function populateStudentFields(data) {
@@ -558,6 +539,11 @@
             }
 
             document.getElementById('student_age').value = data.age || '';
+            document.getElementById('father_full_name').value = data.father_name || '';
+            document.getElementById('mother_full_name').value = data.mother_name || '';
+            document.getElementById('guardian_full_name').value = data.guardian_name || '';
+            document.getElementById('guardian_contact').value = data.guardian_contact || '';
+            document.getElementById('student_address').value = data.address || '';
         }
 
         idInput.addEventListener('input', function() {
