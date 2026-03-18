@@ -418,21 +418,9 @@
             <div class="sub-section section-locked" id="section-father">
                 <div class="section-subtitle">Father's Information</div>
                 <div class="field-row">
-                    <div class="field wide">
-                        <label>Last Name</label>
-                        <input type="text" name="father_last_name" placeholder="Last Name" disabled>
-                    </div>
-                    <div class="field wide">
-                        <label>First Name</label>
-                        <input type="text" name="father_first_name" placeholder="First Name" disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Middle Name</label>
-                        <input type="text" name="father_middle_name" placeholder="Middle Name" disabled>
-                    </div>
-                    <div class="field narrow">
-                        <label>Suffix</label>
-                        <input type="text" name="father_suffix" placeholder="Suffix" disabled>
+                    <div class="field xwide">
+                        <label>Full Name (Last Name, First Name, Middle Name, Suffix)</label>
+                        <input type="text" name="father_full_name" placeholder="e.g. Dela Cruz, Juan Santos Jr." disabled>
                     </div>
                 </div>
             </div>
@@ -441,21 +429,9 @@
             <div class="sub-section section-locked" id="section-mother">
                 <div class="section-subtitle">Mother's Information</div>
                 <div class="field-row">
-                    <div class="field wide">
-                        <label>Last Name</label>
-                        <input type="text" name="mother_last_name" placeholder="Last Name" disabled>
-                    </div>
-                    <div class="field wide">
-                        <label>First Name</label>
-                        <input type="text" name="mother_first_name" placeholder="First Name" disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Middle Name</label>
-                        <input type="text" name="mother_middle_name" placeholder="Middle Name" disabled>
-                    </div>
-                    <div class="field narrow">
-                        <label>Suffix</label>
-                        <input type="text" name="mother_suffix" placeholder="Suffix" disabled>
+                    <div class="field xwide">
+                        <label>Full Name (Last Name, First Name, Middle Name, Suffix)</label>
+                        <input type="text" name="mother_full_name" placeholder="e.g. Dela Cruz, Maria Santos" disabled>
                     </div>
                 </div>
             </div>
@@ -464,21 +440,9 @@
             <div class="sub-section section-locked" id="section-guardian">
                 <div class="section-subtitle">Guardian's Information</div>
                 <div class="field-row">
-                    <div class="field wide">
-                        <label>Last Name</label>
-                        <input type="text" name="guardian_last_name" placeholder="Last Name" disabled>
-                    </div>
-                    <div class="field wide">
-                        <label>First Name</label>
-                        <input type="text" name="guardian_first_name" placeholder="First Name" disabled>
-                    </div>
-                    <div class="field medium">
-                        <label>Middle Name</label>
-                        <input type="text" name="guardian_middle_name" placeholder="Middle Name" disabled>
-                    </div>
-                    <div class="field narrow">
-                        <label>Suffix</label>
-                        <input type="text" name="guardian_suffix" placeholder="Suffix" disabled>
+                    <div class="field xwide">
+                        <label>Full Name (Last Name, First Name, Middle Name, Suffix)</label>
+                        <input type="text" name="guardian_full_name" placeholder="e.g. Dela Cruz, Pedro Santos" disabled>
                     </div>
                     <div class="field medium">
                         <label>Contact Number</label>
