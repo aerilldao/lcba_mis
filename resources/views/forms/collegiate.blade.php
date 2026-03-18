@@ -362,7 +362,31 @@
                         <div class="field-row" style="margin-bottom: 1.5rem;">
                             <div class="field xwide">
                                 <label>Program / Course</label>
-                                <input type="text" name="course" placeholder="e.g. BS Computer Science" value="{{ $record->course ?? '' }}">
+                                <select name="course" id="course">
+                                    <option value="" disabled {{ !$record || !$record->course ? 'selected' : '' }}>Select Program</option>
+                                    
+                                    <optgroup label="UNDERGRADUATE PROGRAMS">
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SCIENCE IN COMPUTER ENGINEERING') ? 'selected' : '' }}>BACHELOR OF SCIENCE IN COMPUTER ENGINEERING</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SCIENCE IN COMPUTER SCIENCE') ? 'selected' : '' }}>BACHELOR OF SCIENCE IN COMPUTER SCIENCE</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF ARTS IN POLITICAL SCIENCE') ? 'selected' : '' }}>BACHELOR OF ARTS IN POLITICAL SCIENCE</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SCIENCE IN ENTREPRENEURSHIP') ? 'selected' : '' }}>BACHELOR OF SCIENCE IN ENTREPRENEURSHIP</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SCIENCE IN ACCOUNTANCY') ? 'selected' : '' }}>BACHELOR OF SCIENCE IN ACCOUNTANCY</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SCIENCE IN BUSINESS ADMINISTRATION') ? 'selected' : '' }}>BACHELOR OF SCIENCE IN BUSINESS ADMINISTRATION</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SECONDARY EDUCATION / BACHELOR OF ELEMENTARY EDUCATION') ? 'selected' : '' }}>BACHELOR OF SECONDARY EDUCATION / BACHELOR OF ELEMENTARY EDUCATION</option>
+                                        <option {{ ($record && $record->course == 'BACHELOR OF SCIENCE IN PSYCHOLOGY') ? 'selected' : '' }}>BACHELOR OF SCIENCE IN PSYCHOLOGY</option>
+                                    </optgroup>
+
+                                    <optgroup label="GRADUATE PROGRAMS">
+                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Guidance and Counseling') ? 'selected' : '' }}>Master of Arts in Education Major in Guidance and Counseling</option>
+                                        <option {{ ($record && $record->course == 'Master in Business Administration') ? 'selected' : '' }}>Master in Business Administration</option>
+                                        <option {{ ($record && $record->course == 'Master of Science in Psychology') ? 'selected' : '' }}>Master of Science in Psychology</option>
+                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Administration and Supervision') ? 'selected' : '' }}>Master of Arts in Education Major in Administration and Supervision</option>
+                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in English') ? 'selected' : '' }}>Master of Arts in Education Major in English</option>
+                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Filipino') ? 'selected' : '' }}>Master of Arts in Education Major in Filipino</option>
+                                        <option {{ ($record && $record->course == 'Master of Arts in Education Major in Social Studies') ? 'selected' : '' }}>Master of Arts in Education Major in Social Studies</option>
+                                        <option {{ ($record && $record->course == 'Master in Management major in Public Administration') ? 'selected' : '' }}>Master in Management major in Public Administration</option>
+                                    </optgroup>
+                                </select>
                             </div>
                             <div class="field wide">
                                 <label>Major (If applicable)</label>
