@@ -39,7 +39,7 @@
         .checklist-nav h1 {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--primary-color);
+            color: var(--primary-text-heading);
             letter-spacing: 0.05em;
             margin: 0;
         }
@@ -87,14 +87,14 @@
         }
 
         .section-title {
-            color: var(--primary-color);
+            color: var(--primary-text-heading);
             font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid rgba(30, 58, 138, 0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Horizontal row of fields */
@@ -209,11 +209,11 @@
         .section-subtitle {
             font-size: 0.75rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary-text-heading);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 1.25rem;
-            opacity: 0.8;
+            opacity: 1;
         }
 
         /* Custom Datepicker Dropdown */
