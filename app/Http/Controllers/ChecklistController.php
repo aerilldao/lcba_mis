@@ -4,26 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\BasicEducation;
-use App\Models\CgStudy;
+use App\Models\EnrollmentRecord;
+use App\Models\StudentInfo;
 
 class ChecklistController extends Controller
 {
     public function finishBasicEducation(Request $request)
     {
         $id = $request->input('reg_id');
-        $record = BasicEducation::findOrFail($id);
+        $record = EnrollmentRecord::with('student')->findOrFail($id);
 
         $data = $request->except(['_token', 'reg_id']);
         
-        // Handle checkbox booleans
-        $data['is_balik_aral']  = $request->has('is_balik_aral');
-        $data['is_senior_high'] = $request->has('is_senior_high');
-        $data['is_freshman']    = $request->has('is_freshman');
-        $data['is_transferee']  = $request->has('is_transferee');
+        // Split data between student profile and enrollment record
+        $studentFields = ['last_name', 'first_name', 'middle_name', 'date_of_birth', 'sex', 'age', 'father_name', 'mother_name', 'guardian_name', 'guardian_contact', 'address', 'grade_level', 'course', 'major', 'section'];
         
-        $data['credentials']    = $request->input('credentials', []);
+        // Map form fields to database columns if necessary
+        if ($request->has('year_level')) {
+            $request->merge(['grade_level' => $request->year_level]);
+        }
+        
+        $studentData = array_intersect_key($request->all(), array_flip($studentFields));
+        
+        if (!empty($studentData) && $record->student) {
+            $record->student->update($studentData);
+        }
 
+        // Credentials and status logic handled by model's update (stored in extras)
+        $data['credentials'] = $request->input('credentials', []);
         $record->update($data);
 
         return redirect()->route('dashboard')->with('success', 'Registration completed successfully!');
@@ -32,19 +40,25 @@ class ChecklistController extends Controller
     public function finishCollegiate(Request $request)
     {
         $id = $request->input('reg_id');
-        $record = CgStudy::findOrFail($id);
+        $record = EnrollmentRecord::with('student')->findOrFail($id);
 
-        $data = $request->except(['_token', 'reg_id']);
+        // Split data similarly for Collegiate
+        $studentFields = ['last_name', 'first_name', 'middle_name', 'date_of_birth', 'sex', 'age', 'father_name', 'mother_name', 'guardian_name', 'guardian_contact', 'address', 'grade_level', 'course', 'major', 'section'];
         
-        // Handle student category dropdown mapping
-        $cat = $request->input('student_category');
-        $data['is_freshman']       = ($cat === 'freshman');
-        $data['is_transferee']     = ($cat === 'transferee');
-        $data['is_cross_enrollee'] = ($cat === 'cross_enrollee');
-        $data['is_returnee']       = ($cat === 'returnee');
+        if ($request->has('year_level')) {
+            $request->merge(['grade_level' => $request->year_level]);
+        }
+        
+        $studentData = array_intersect_key($request->all(), array_flip($studentFields));
+        
+        if (!empty($studentData) && $record->student) {
+            $record->student->update($studentData);
+        }
 
-        $data['credentials']    = $request->input('credentials', []);
-
+        // Enrollment Record Details
+        $data = $request->except(['_token', 'reg_id', 'last_name', 'first_name', 'middle_name', 'date_of_birth', 'sex', 'age', 'father_name', 'mother_name', 'guardian_name', 'guardian_contact', 'address', 'grade_level', 'course', 'major', 'section']);
+        $data['credentials'] = $request->input('credentials', []);
+        
         $record->update($data);
 
         return redirect()->route('dashboard')->with('success', 'Collegiate registration completed successfully!');
@@ -53,7 +67,7 @@ class ChecklistController extends Controller
     public function basicEducationForm(Request $request)
     {
         $regId = $request->query('reg_id');
-        $record = $regId ? BasicEducation::find($regId) : null;
+        $record = $regId ? EnrollmentRecord::with('student')->find($regId) : null;
         
         return view('forms.basic_education', compact('record'));
     }
@@ -61,7 +75,7 @@ class ChecklistController extends Controller
     public function collegiateForm(Request $request)
     {
         $regId = $request->query('reg_id');
-        $record = $regId ? CgStudy::find($regId) : null;
+        $record = $regId ? EnrollmentRecord::with('student')->find($regId) : null;
 
         return view('forms.collegiate', compact('record'));
     }
@@ -77,31 +91,25 @@ class ChecklistController extends Controller
             return response()->json(['found' => false, 'message' => 'No ID number provided.'], 400);
         }
 
-        $student = DB::connection('mysql_lcba')
-            ->table('student_info')
-            ->where('id_number', $idNumber)
-            ->first();
+        $student = StudentInfo::where('id_number', $idNumber)->first();
 
         if (!$student) {
             return response()->json(['found' => false, 'message' => 'Student not found.']);
         }
 
-        /** @var array<string,mixed> $s */
-        $s = (array) $student;
-
         return response()->json([
             'found'         => true,
-            'first_name'    => $s['first_name']    ?? '',
-            'last_name'     => $s['last_name']     ?? '',
-            'middle_name'   => $s['middle_name']   ?? '',
-            'date_of_birth' => $s['date_of_birth'] ?? '',
-            'sex'           => $s['sex']           ?? '',
-            'age'           => $s['age']           ?? '',
-            'father_name'   => $s['father_name']   ?? '',
-            'mother_name'   => $s['mother_name']   ?? '',
-            'guardian_name' => $s['guardian_name'] ?? '',
-            'guardian_contact' => $s['guardian_contact'] ?? '',
-            'address' => $s['address'] ?? '',
+            'first_name'    => $student->first_name ?? '',
+            'last_name'     => $student->last_name    ?? '',
+            'middle_name'   => $student->middle_name  ?? '',
+            'date_of_birth' => $student->date_of_birth ?? '',
+            'sex'           => $student->sex          ?? '',
+            'age'           => $student->age          ?? '',
+            'father_name'   => $student->father_name  ?? '',
+            'mother_name'   => $student->mother_name  ?? '',
+            'guardian_name' => $student->guardian_name ?? '',
+            'guardian_contact' => $student->guardian_contact ?? '',
+            'address' => $student->address ?? '',
         ]);
     }
 
@@ -112,12 +120,13 @@ class ChecklistController extends Controller
             'category' => 'required|in:basic_education,cg_studies',
         ]);
 
-        $payload = [
-            'id_no'            => $request->id_no,
+        // 1. Synchronize Source of Truth (student_info)
+        $studentData = [
+            'id_number'        => $request->id_no,
             'last_name'        => $request->last_name,
             'first_name'       => $request->first_name,
             'middle_name'      => $request->middle_name,
-            'birthdate'        => $request->birthdate ?: null,
+            'date_of_birth'    => $request->birthdate ?: null,
             'sex'              => $request->sex,
             'age'              => $request->age ?: null,
             'father_name'      => $request->father_name,
@@ -125,24 +134,39 @@ class ChecklistController extends Controller
             'guardian_name'    => $request->guardian_name,
             'guardian_contact' => $request->guardian_contact,
             'address'          => $request->address,
+        ];
+
+        StudentInfo::updateOrCreate(
+            ['id_number' => $request->id_no],
+            $studentData
+        );
+
+        // 2. Minimum MIS Record
+        $payload = [
+            'student_id_no'    => $request->id_no,
+            'department'       => $request->category === 'basic_education' ? 'Basic Education' : 'College',
             'recorded_by'      => \Illuminate\Support\Facades\Auth::id(),
         ];
 
-        if ($request->category === 'basic_education') {
-            $record = \App\Models\BasicEducation::updateOrCreate(
-                ['id_no' => $request->id_no],
-                $payload
-            );
-        } else {
-            $record = \App\Models\CgStudy::updateOrCreate(
-                ['id_no' => $request->id_no],
-                $payload
-            );
-        }
+        // Specific enrollment factors
+        $extras = [
+            'is_balik_aral' => $request->has('is_balik_aral'),
+            'is_freshman'   => $request->has('is_freshman'),
+            'is_transferee' => $request->has('is_transferee'),
+        ];
+        
+        $payload['extras'] = $extras;
+
+        $record = EnrollmentRecord::updateOrCreate(
+            ['student_id_no' => $request->id_no],
+            $payload
+        );
+
+        \Illuminate\Support\Facades\Log::info("Checklist Saved: Student {$request->id_no}, Record ID {$record->id}");
 
         return response()->json([
             'status' => 'success',
-            'id' => $record->id
+            'id' => (int)$record->id
         ]);
     }
 }

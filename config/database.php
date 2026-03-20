@@ -63,25 +63,6 @@ return [
             ]) : [],
         ],
 
-        'mysql_lcba' => [
-            'driver' => 'mysql',
-            'host' => env('LCBA_DB_HOST', '127.0.0.1'),
-            'port' => env('LCBA_DB_PORT', '3306'),
-            'database' => env('LCBA_DB_DATABASE', 'lcba_info_sys'),
-            'username' => env('LCBA_DB_USERNAME', 'root'),
-            'password' => env('LCBA_DB_PASSWORD', ''),
-            'unix_socket' => '',
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                (PHP_VERSION_ID >= 80500 ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
-        ],
-
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

@@ -10,24 +10,36 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $kinderElem = \App\Models\BasicEducation::whereIn('grade_level', [
-            'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'
-        ])->count();
+        // Totals by department (Direct count to ensure accuracy)
+        $totalBasic = \App\Models\EnrollmentRecord::where('department', 'Basic Education')->count();
+        $totalCollege = \App\Models\EnrollmentRecord::where('department', 'College')->count();
 
-        $juniorHigh = \App\Models\BasicEducation::whereIn('grade_level', [
-            'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'
-        ])->count();
+        // Breakdown based on student_info
+        $baseJoin = \App\Models\EnrollmentRecord::leftJoin('student_info', 'enrollment_records.student_id_no', '=', 'student_info.id_number');
 
-        $seniorHigh = \App\Models\BasicEducation::whereIn('grade_level', [
-            'Grade 11', 'Grade 12'
-        ])->count();
+        $kinderElem = (clone $baseJoin)->where('enrollment_records.department', 'Basic Education')
+            ->whereIn('student_info.grade_level', ['Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'])
+            ->count();
 
-        $college = \App\Models\CgStudy::where('year_level', '!=', 'Graduate / Masteral')->count();
+        $juniorHigh = (clone $baseJoin)->where('enrollment_records.department', 'Basic Education')
+            ->whereIn('student_info.grade_level', ['Grade 7', 'Grade 8', 'Grade 9', 'Grade 10'])
+            ->count();
 
-        $graduateStudies = \App\Models\CgStudy::where('year_level', 'Graduate / Masteral')->count();
+        $seniorHigh = (clone $baseJoin)->where('enrollment_records.department', 'Basic Education')
+            ->whereIn('student_info.grade_level', ['Grade 11', 'Grade 12'])
+            ->count();
 
-        $totalBasic = $kinderElem + $juniorHigh + $seniorHigh;
-        $totalCollege = $college + $graduateStudies;
+        // If a student in Basic Education doesn't have a categorized grade level, put them in Elem by default to avoid sum mismatch
+        $categorizedBasic = $kinderElem + $juniorHigh + $seniorHigh;
+        if ($categorizedBasic < $totalBasic) {
+            $kinderElem += ($totalBasic - $categorizedBasic);
+        }
+
+        $graduateStudies = (clone $baseJoin)->where('enrollment_records.department', 'College')
+            ->where('student_info.grade_level', 'Graduate / Masteral')
+            ->count();
+            
+        $college = $totalCollege - $graduateStudies;
 
         return view('dashboard', compact(
             'kinderElem', 

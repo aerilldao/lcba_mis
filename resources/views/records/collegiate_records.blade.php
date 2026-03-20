@@ -429,8 +429,9 @@
                         </td>
                         <td>{{ $rec->course }} / {{ $rec->year_level }}</td>
                         <td>
-                            <div class="status-option incomplete active" style="padding: 0.3rem 0.6rem; font-size: 0.7rem; display: inline-flex; pointer-events: none;">
-                                <span>Pending</span>
+                            @php $status = $rec->registration_status; @endphp
+                            <div class="status-option {{ $status->class }} active" style="padding: 0.3rem 0.6rem; font-size: 0.7rem; display: inline-flex; pointer-events: none; background-color: {{ $status->color }}; color: white; border-radius: 8px;">
+                                <span>{{ $status->label }}</span>
                             </div>
                         </td>
                         <td>
