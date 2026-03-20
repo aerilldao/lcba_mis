@@ -7,6 +7,23 @@ use Illuminate\Support\Str;
 
 class EnrollmentRecord extends Model
 {
+    public $incrementing = true;
+    protected $keyType = 'int';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically update the static enrollment_status column 
+        // to match the dynamic registration_status logic on every save
+        static::saving(function ($record) {
+            $statusObj = $record->registration_status;
+            if ($statusObj && isset($statusObj->label)) {
+                $record->enrollment_status = $statusObj->label;
+            }
+        });
+    }
+
     protected $table = 'enrollment_records';
 
     protected $fillable = [

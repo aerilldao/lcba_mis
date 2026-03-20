@@ -130,38 +130,35 @@ class SuperUserController extends Controller
             // Force visibility of hidden fields for the dump
             $users = User::all()->makeVisible(['password', 'remember_token']);
             $events = CalendarEvent::all();
+            $students = \App\Models\StudentInfo::all();
+            $enrollments = \App\Models\EnrollmentRecord::all();
 
             $sql = "-- LCBA MIS - System Registry Export\n";
             $sql .= "-- Generated: " . now()->toDateTimeString() . "\n";
-            $sql .= "-- Tables: users, calendar_events\n\n";
+            $sql .= "-- Tables: users, calendar_events, student_info, enrollment_records\n\n";
             $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
-            // --- Export Users Table ---
-            $sql .= "--\n-- Exporting Data for Table: users\n--\n";
-            foreach ($users as $user) {
-                $attrs = $user->getAttributes();
-                $columns = array_keys($attrs);
-                $values = array_map(function($val) {
-                    if (is_null($val)) return 'NULL';
-                    if (is_numeric($val) && !is_string($val)) return $val;
-                    return "'" . str_replace("'", "''", $val) . "'";
-                }, array_values($attrs));
+            // Helper to generate INSERT statements
+            $generateInserts = function($collection, $tableName) {
+                $output = "--\n-- Exporting Data for Table: $tableName\n--\n";
+                foreach ($collection as $model) {
+                    $attrs = $model->getAttributes();
+                    $columns = array_keys($attrs);
+                    $values = array_map(function($val) {
+                        if (is_null($val)) return 'NULL';
+                        if (is_numeric($val) && !is_string($val)) return $val;
+                        return "'" . str_replace(["'", "\n", "\r"], ["''", "\\n", "\\r"], $val) . "'";
+                    }, array_values($attrs));
 
-                $sql .= "INSERT INTO users (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ") ON DUPLICATE KEY UPDATE id=id;\n";
-            }
+                    $output .= "INSERT INTO $tableName (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ") ON DUPLICATE KEY UPDATE id=id;\n";
+                }
+                return $output . "\n";
+            };
 
-            $sql .= "\n--\n-- Exporting Data for Table: calendar_events\n--\n";
-            foreach ($events as $event) {
-                $attrs = $event->getAttributes();
-                $columns = array_keys($attrs);
-                $values = array_map(function($val) {
-                    if (is_null($val)) return 'NULL';
-                    if (is_numeric($val) && !is_string($val)) return $val;
-                    return "'" . str_replace("'", "''", $val) . "'";
-                }, array_values($attrs));
-
-                $sql .= "INSERT INTO calendar_events (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ") ON DUPLICATE KEY UPDATE id=id;\n";
-            }
+            $sql .= $generateInserts($users, 'users');
+            $sql .= $generateInserts($events, 'calendar_events');
+            $sql .= $generateInserts($students, 'student_info');
+            $sql .= $generateInserts($enrollments, 'enrollment_records');
 
             $sql .= "\nSET FOREIGN_KEY_CHECKS = 1;\n";
 
