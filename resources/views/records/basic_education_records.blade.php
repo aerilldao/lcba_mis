@@ -19,7 +19,7 @@
 
             <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                 @csrf
-                <button type="submit" class="btn-login" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Log Out</button>
+                <button type="submit" class="btn-logout">Log Out</button>
             </form>
         </div>
     </header>
@@ -86,10 +86,10 @@
             <table class="records-table">
                 <thead>
                     <tr>
-                        <th style="width: 35%;">Student Name</th>
-                        <th style="width: 25%;">Grade Level</th>
-                        <th style="width: 20%;">Status</th>
-                        <th style="width: 20%;">Actions</th>
+                        <th>Student Name</th>
+                        <th>Grade Level</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,19 +101,16 @@
                         </td>
                         <td>{{ $rec->grade_level }}</td>
                         <td>
-                            @php $status = $rec->registration_status; @endphp
-                            <div class="status-option {{ $status->class }} active" style="padding: 0.3rem 0.6rem; font-size: 0.7rem; display: inline-flex; pointer-events: none; background-color: {{ $status->color }}; color: white; border-radius: 8px;">
-                                <span>{{ $status->label }}</span>
-                            </div>
+                            <div class="status-badge complete">Complete</div>
                         </td>
                         <td>
-                            <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+                            <div style="display: flex; gap: 0.75rem; flex-direction: column;">
                                 <a href="{{ route('basic_education', ['reg_id' => $rec->id]) }}" class="btn-update">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                                     Update
                                 </a>
-                                <a href="{{ route('basic_education.print', ['id' => $rec->id]) }}" target="_blank" class="btn-update" style="background: rgba(0,0,0,0.05); color: var(--text-main); border-color: var(--card-border);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                <a href="{{ route('basic_education.print', ['id' => $rec->id]) }}" target="_blank" class="btn-print">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                                     Print Form
                                 </a>
                             </div>
