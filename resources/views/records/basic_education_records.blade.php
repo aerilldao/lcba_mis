@@ -24,7 +24,7 @@
         </div>
     </header>
 
-    <main class="records-container">
+    <main class="records-container basic-ed-records-section">
         
         <div class="records-list-card">
             
