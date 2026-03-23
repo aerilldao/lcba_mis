@@ -5,5 +5,5 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
 <link rel="apple-touch-icon" href="{{ asset('images/LCBA LOGO VECTOR.png') }}">
-<link href="{{ asset('css/styles.css') }}" rel="stylesheet">
-<script src="{{ asset('js/dark-mode.js') }}"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="{{ asset('js/dark-mode.js') }}"></script>

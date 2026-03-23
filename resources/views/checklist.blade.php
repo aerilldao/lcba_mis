@@ -1,312 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>LCBA - Checklist</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/dark-mode.js') }}"></script>
-    <style>
-        .checklist-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 1rem 2rem;
-            background: var(--header-bg);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 50;
-            transition: background-color 0.3s ease;
-        }
-
-        .checklist-nav-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .checklist-nav-logo {
-            height: 50px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .checklist-nav h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary-text-heading);
-            letter-spacing: 0.05em;
-            margin: 0;
-        }
-
-        .sub-navbar {
-            background: var(--primary-color);
-            width: 100%;
-            padding: 0.75rem 2rem;
-            color: white;
-            position: fixed;
-            top: 82px;
-            left: 0;
-            z-index: 40;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .sub-navbar span {
-            font-weight: 600;
-            font-size: 0.95rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .checklist-content {
-            margin-top: 150px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 1400px;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Section card */
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: opacity 0.35s ease;
-        }
-
-        .section-title {
-            color: var(--primary-text-heading);
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Horizontal row of fields */
-        .field-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: flex-end;
-        }
-
-        /* Individual field */
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-            flex: 1 1 180px;
-        }
-
-        .field.narrow  { flex: 0 1 140px; }
-        .field.medium  { flex: 1 1 200px; }
-        .field.wide    { flex: 1 1 260px; }
-        .field.xwide   { flex: 2 1 300px; }
-
-        .field label {
-            font-weight: 600;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-
-        .field input,
-        .field select {
-            width: 100%;
-            padding: 0.65rem 1rem;
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            outline: none;
-            font-family: inherit;
-            font-size: 0.95rem;
-            color: var(--text-main);
-            background: var(--input-bg);
-            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
-        }
-
-        .field input:focus,
-        .field select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-        }
-
-        /* Locked / disabled state */
-        .field input:disabled,
-        .field select:disabled {
-            background: #f1f5f9;
-            color: #94a3b8;
-            cursor: not-allowed;
-            border-color: rgba(0,0,0,0.06);
-        }
-
-        .section-locked {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-
-        .section-unlocked {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ID hint text */
-        .id-hint {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.4rem;
-            font-style: italic;
-        }
-
-        /* ID card input styling */
-        #id_no {
-            padding: 0.65rem 1rem;
-            border: 1.5px solid rgba(30, 58, 138, 0.3);
-            border-radius: 10px;
-            outline: none;
-            font-family: inherit;
-            font-size: 1rem;
-            color: var(--text-main);
-            background: var(--input-bg);
-            transition: border-color 0.3s, box-shadow 0.3s;
-            min-width: 220px;
-        }
-
-        #id_no:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-        }
-
-        @media (max-width: 768px) {
-            .field-row { flex-direction: column; }
-            .field, .field.narrow, .field.medium, .field.wide, .field.xwide {
-                flex: 1 1 100%;
-            }
-        }
-
-        .sub-section {
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(30, 58, 138, 0.1);
-        }
-        .sub-section:last-child {
-            border-bottom: none;
-        }
-        .section-subtitle {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--primary-text-heading);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1.25rem;
-            opacity: 1;
-        }
-
-        /* Custom Datepicker Dropdown */
-        .datepicker-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%; /* Or could change min-width: 250px depending on layout */
-            min-width: 280px;
-            margin-top: 10px;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.25rem;
-            z-index: 1050;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .datepicker-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .dp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .dp-month-container { display: flex; align-items: center; gap: 0.5rem; }
-        .dp-month { font-weight: 800; font-size: 0.85rem; color: #fff; text-transform: uppercase; }
-        .dp-year-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid transparent;
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.8rem;
-            border-radius: 6px;
-            padding: 4px 10px;
-            cursor: pointer;
-            outline: none;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-        .dp-year-btn:hover {
-            background: rgba(255,255,255,0.15);
-        }
-        .dp-years-view {
-            display: none;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-            max-height: 220px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .dp-years-view.active {
-            display: grid;
-        }
-        .dp-year-item {
-            text-align: center;
-            padding: 10px 0;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-        .dp-year-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .dp-year-item.selected { background: var(--primary-color); color: #fff; }
-        
-        .dp-years-view::-webkit-scrollbar { width: 4px; }
-        .dp-years-view::-webkit-scrollbar-track { background: transparent; }
-        .dp-years-view::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-        .dp-years-view::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
-
-        .dp-calendar-view { display: block; }
-        .dp-calendar-view.hidden { display: none; }
-        .dp-nav { display: flex; gap: 0.5rem; }
-        .dp-nav-btn { background: rgba(255,255,255,0.05); border: none; color: #fff; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-        .dp-nav-btn:hover { background: var(--primary-color); }
-        .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-        .dp-weekday { text-align: center; font-size: 0.65rem; font-weight: 800; color: var(--text-muted); padding: 5px 0; }
-        .dp-day { 
-            text-align: center; padding: 8px 0; font-size: 0.8rem; font-weight: 700; border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s;
-        }
-        .dp-day:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .dp-day.current { color: #fff; }
-        .dp-day.selected { background: var(--primary-color); color: #fff; }
-        .dp-day.today { color: var(--primary-color); position: relative; }
-        .dp-day.today::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--primary-color); }
-    </style>
+    @include('partials.head', ['title' => 'LCBA - Checklist'])
 </head>
-<body style="align-items: flex-start; background-color: var(--bg-alt); display: block; overflow-y: auto; overflow-x: hidden;">
+
+</head>
+    <body class="checklist-body">
 
     <!-- Main Header -->
     <nav class="checklist-nav">
@@ -314,7 +13,7 @@
             <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="checklist-nav-logo">
             <h1>CHECKLIST</h1>
         </div>
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <div class="nav-actions">
             <a href="{{ route('dashboard') }}" class="btn-back" style="text-decoration: none;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 Back to Dashboard
@@ -342,9 +41,9 @@
             <!-- ID Number Section -->
             <div class="sub-section">
                 <div class="section-subtitle">Student ID Lookup</div>
-                <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-                    <div>
-                        <label for="id_no" style="display: block; font-weight: 600; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.35rem;">ID No.</label>
+                <div class="id-lookup-row">
+                    <div class="field medium">
+                        <label for="id_no">ID No.</label>
                         <input type="text" id="id_no" name="id_no" placeholder="Enter ID Number" autocomplete="off">
                     </div>
                 </div>
@@ -370,9 +69,9 @@
                         <label>Suffix</label>
                         <input type="text" name="student_suffix" placeholder="Jr., III, etc." disabled>
                     </div>
-                    <div class="field medium" style="position: relative;">
+                    <div class="field medium date-field-container">
                         <label>Birthdate</label>
-                        <input type="text" id="checklist-input-date" name="student_birthdate" placeholder="YYYY-MM-DD" readonly disabled style="cursor: pointer;">
+                        <input type="text" id="checklist-input-date" name="student_birthdate" placeholder="YYYY-MM-DD" readonly disabled>
                         <div class="datepicker-dropdown" id="checklist-datepicker">
                             <div class="dp-header">
                                 <div class="dp-month-container">
@@ -464,7 +163,7 @@
         </div>
 
         <!-- Actions -->
-        <div style="display: flex; justify-content: flex-end; gap: 1rem; padding-bottom: 2rem;">
+        <div class="checklist-actions">
             <a href="{{ route('basic_education') }}" id="btn-basic-ed" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Basic Education</a>
             <a href="{{ route('collegiate') }}" id="btn-collegiate" class="btn-login" style="text-align: center; text-decoration: none; padding: 0.8rem 2rem;">Collegiate &amp; Graduate Studies</a>
         </div>

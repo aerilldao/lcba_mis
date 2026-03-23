@@ -3,7 +3,7 @@
 <head>
     @include('partials.head', ['title' => 'LCBA - Selection Portal'])
 </head>
-<body>
+    <body class="landing-page-body">
     <div class="background-animation"></div>
     
     <button onclick="toggleDarkMode()" class="theme-toggle-btn" title="Toggle Night Mode">
@@ -12,10 +12,7 @@
     </button>
 
     <div class="container">
-        <header class="header-container fade-in" style="position: relative;">
-            <div style="position: absolute; top: -20px; right: 0;">
-                 
-            </div>
+        <header class="header-container fade-in">
             <img src="{{ asset('images/LCBA LOGO VECTOR.png') }}" alt="LCBA Logo" class="header-logo">
             <h1>LAGUNA COLLEGE <br>OF BUSINESS & ARTS</h1>
         </header>
@@ -23,7 +20,6 @@
         <main class="selection-container fade-in-delay-2">
             <a href="#guidance" class="card guidance-card" id="card-guidance">
                 <div class="card-icon">
-                    <!-- SVG icon for guidance -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                         <circle cx="9" cy="7" r="4"/>
@@ -43,7 +39,6 @@
             
             <a href="#registrar" class="card registrar-card" id="card-registrar">
                 <div class="card-icon">
-                    <!-- SVG icon for registrar -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-check">
                         <path d="M8 3H2v15h7c1.7 0 3 1.3 3 3V7c0-2.2-1.8-4-4-4Z"/>
                         <path d="m16 12 2 2 4-4"/>
