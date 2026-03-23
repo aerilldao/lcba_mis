@@ -432,10 +432,16 @@
                             </div>
                         </td>
                         <td>
-                            <a href="{{ route('basic_education', ['reg_id' => $rec->id]) }}" class="btn-update">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                                Update
-                            </a>
+                            <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+                                <a href="{{ route('basic_education', ['reg_id' => $rec->id]) }}" class="btn-update">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                    Update
+                                </a>
+                                <a href="{{ route('basic_education.print', ['id' => $rec->id]) }}" target="_blank" class="btn-update" style="background: rgba(0,0,0,0.05); color: var(--text-main); border-color: var(--card-border);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    Print Form
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @empty

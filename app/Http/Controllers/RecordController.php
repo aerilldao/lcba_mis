@@ -32,4 +32,16 @@ class RecordController extends Controller
 
         return view('records.collegiate_records', compact('records'));
     }
+
+    public function printBasicEducation($id)
+    {
+        $record = EnrollmentRecord::with('student')->findOrFail($id);
+        return view('records.print_basic_education', compact('record')); // This will be the new view
+    }
+
+    public function printCollegiate($id)
+    {
+        $record = EnrollmentRecord::with('student')->findOrFail($id);
+        return view('records.print_collegiate', compact('record')); // This is the one from the photo
+    }
 }
