@@ -36,15 +36,15 @@ The dashboard provides a structured interface for handling student records, help
 >`composer install`
 2. **Environment Configuration**
 - Go to the .env file
-- Ensure the _DB_DATABASE_ is set to _lcba_mis_
+- Ensure the _DB_DATABASE_ is set to _lcba_info_sys_
 - Create the database in PHPmyAdmin
     - Go to _http://localhost/phpmyadmin/_
     - Click New
-    - Name it _lcba_mis_ and click *Create*
+    - Name it _lcba_info_sys_ and click *Create*
 3. Initialize Table Structure
 >`php artisan migrate`
 4. Import Registry Dump
-- Click Import in the _lcba_mis_ sidebar
+- Click Import in the _lcba_info_sys_ sidebar
 - Choose file
 - Import
 - Once verified run the command below:

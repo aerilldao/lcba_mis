@@ -49,11 +49,30 @@ class EnrollmentRecord extends Model
     public function getBirthdateAttribute() { return $this->student->date_of_birth ?? ($this->extras['birthdate'] ?? null); }
     public function getSexAttribute() { return $this->student->sex ?? ($this->extras['sex'] ?? ''); }
     public function getAgeAttribute() { return $this->student->age ?? ($this->extras['age'] ?? null); }
+    public function getPlaceOfBirthAttribute() { return $this->student->place_of_birth ?? ($this->extras['place_of_birth'] ?? ''); }
+    public function getCitizenshipAttribute() { return $this->student->citizenship ?? ($this->extras['citizenship'] ?? 'Filipino'); }
+    public function getCivilStatusAttribute() { return $this->student->civil_status ?? ($this->extras['civil_status'] ?? 'Single'); }
     public function getFatherNameAttribute() { return $this->student->father_name ?? ($this->extras['father_name'] ?? ''); }
+    public function getFatherOccupationAttribute() { return $this->student->father_occupation ?? ($this->extras['father_occupation'] ?? ''); }
     public function getMotherNameAttribute() { return $this->student->mother_name ?? ($this->extras['mother_name'] ?? ''); }
+    public function getMotherOccupationAttribute() { return $this->student->mother_occupation ?? ($this->extras['mother_occupation'] ?? ''); }
     public function getGuardianNameAttribute() { return $this->student->guardian_name ?? ($this->extras['guardian_name'] ?? ''); }
     public function getGuardianContactAttribute() { return $this->student->guardian_contact ?? ($this->extras['guardian_contact'] ?? ''); }
+    public function getGuardianAddressAttribute() { return $this->student->guardian_address ?? ($this->extras['guardian_address'] ?? ''); }
+    public function getContactNumberAttribute() { return $this->student->contact_number ?? ($this->extras['contact_number'] ?? ''); }
+    public function getEmailAttribute() { return $this->student->email ?? ($this->extras['email'] ?? ''); }
     public function getAddressAttribute() { return $this->student->address ?? ($this->extras['address'] ?? ''); }
+
+
+    public function getElementarySchoolAttribute() { return $this->student->elementary_school ?? ($this->extras['elementary_school'] ?? ''); }
+    public function getElementaryAddressAttribute() { return $this->student->elementary_address ?? ($this->extras['elementary_address'] ?? ''); }
+    public function getElementaryYearAttribute() { return $this->student->elementary_year ?? ($this->extras['elementary_year'] ?? ''); }
+    public function getShsSchoolAttribute() { return $this->student->shs_school ?? ($this->extras['shs_school'] ?? ''); }
+    public function getShsAddressAttribute() { return $this->student->shs_address ?? ($this->extras['shs_address'] ?? ''); }
+    public function getShsYearAttribute() { return $this->student->shs_year ?? ($this->extras['shs_year'] ?? ''); }
+    public function getCollegeSchoolAttribute() { return $this->student->college_school ?? ($this->extras['college_school'] ?? ''); }
+    public function getCollegeAddressAttribute() { return $this->student->college_address ?? ($this->extras['college_address'] ?? ''); }
+    public function getCollegeYearAttribute() { return $this->student->college_year ?? ($this->extras['college_year'] ?? ''); }
 
     // --- Enrollment Compatibility ---
 
@@ -100,7 +119,10 @@ class EnrollmentRecord extends Model
             'credentials', 'is_balik_aral', 'is_senior_high', 'is_freshman', 'is_transferee', 
             'is_cross_enrollee', 'is_returnee', 'lrn', 'ecs', 'approvals',
             'student_category', 'student_sub_category', 'student_credentials',
-            'last_school_name', 'last_school_year', 'school_id', 'strand', 'section'
+            'last_school_name', 'last_school_year', 'school_id', 'strand', 'section',
+            'place_of_birth', 'citizenship', 'civil_status', 'father_occupation', 'mother_occupation',
+            'guardian_address', 'contact_number', 'email', 'elementary_school', 'elementary_address',
+            'elementary_year', 'shs_school', 'shs_address', 'shs_year', 'college_school', 'college_address', 'college_year'
         ];
 
         if (in_array($key, $extraKeys)) {

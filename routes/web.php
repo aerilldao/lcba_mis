@@ -42,4 +42,6 @@ Route::get('/basic-education', [ChecklistController::class, 'basicEducationForm'
 Route::get('/collegiate', [ChecklistController::class, 'collegiateForm'])->middleware('auth')->name('collegiate');
 
 Route::get('/basic-education-records', [RecordController::class, 'basicEducationRecords'])->middleware('auth')->name('basic_education_records');
+Route::get('/basic-education-records/print/{id}', [RecordController::class, 'printBasicEducation'])->middleware('auth')->name('basic_education.print');
 Route::get('/collegiate-records', [RecordController::class, 'collegiateRecords'])->middleware('auth')->name('collegiate_records');
+Route::get('/collegiate-records/print/{id}', [RecordController::class, 'printCollegiate'])->middleware('auth')->name('collegiate.print');
