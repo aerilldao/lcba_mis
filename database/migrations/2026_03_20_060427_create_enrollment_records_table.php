@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -15,21 +15,21 @@ return new class extends Migration
             $table->string('last_name', 80);
             $table->string('first_name', 80);
             $table->string('middle_name', 80)->nullable();
-            
+
             // Simplified Criteria
             $table->string('department'); // Basic Education, College, Graduate
             $table->string('grade_level')->nullable(); // Grade 1, 1st Year, etc.
             $table->string('strand_course')->nullable(); // STEM, BSIT, etc.
             $table->string('major')->nullable();
-            
+
             $table->string('school_year', 30)->nullable();
             $table->string('semester', 30)->nullable();
-            
+
             // Status for enrollment logic
-            $table->string('enrollment_status', 20)->default('Pending'); 
-            
+            $table->string('enrollment_status', 20)->default('Pending');
+
             // JSON metadata for extraneous fields
-            $table->json('extras')->nullable(); 
+            $table->json('extras')->nullable();
 
             $table->foreignId('recorded_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();

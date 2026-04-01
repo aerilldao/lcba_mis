@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('student_info')) {
+        if (! Schema::hasTable('student_info')) {
             Schema::create('student_info', function (Blueprint $table) {
                 $table->id();
                 $table->string('id_number', 50)->unique()->index();
@@ -26,14 +26,14 @@ return new class extends Migration
                 $table->string('guardian_name', 150)->nullable();
                 $table->string('guardian_contact', 50)->nullable();
                 $table->text('address')->nullable();
-                
+
                 // Educational details
                 $table->string('grade_level', 50)->nullable();
                 $table->string('course', 150)->nullable();
                 $table->string('major', 150)->nullable();
                 $table->string('strand', 150)->nullable();
                 $table->string('section', 50)->nullable();
-                
+
                 $table->timestamps();
             });
         }

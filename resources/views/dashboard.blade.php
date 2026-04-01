@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
     @include('partials.head', ['title' => 'LCBA - Dashboard'])
-
 </head>
-<body style="align-items: flex-start; background-color: var(--bg-alt);">
-<body class="dashboard-body">
+<body class="dashboard-body" style="align-items: flex-start; background-color: var(--bg-alt);">
     @include('partials.navbar-dashboard')
 
     <!-- Main Content -->
@@ -94,15 +92,13 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
-
         </div>
 
         @include('partials.sidebar-calendar')
+        @include('partials.easter-egg')
+    </main>
 
-    @include('partials.easter-egg')
-    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const notesArea = document.getElementById('quick-notes');
@@ -149,7 +145,5 @@
             }
         });
     </script>
-
-    
 </body>
 </html>

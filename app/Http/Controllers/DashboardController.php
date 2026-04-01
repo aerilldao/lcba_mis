@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalendarEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\CalendarEvent;
 
 class DashboardController extends Controller
 {
@@ -38,14 +38,14 @@ class DashboardController extends Controller
         $graduateStudies = (clone $baseJoin)->where('enrollment_records.department', 'College')
             ->where('student_info.grade_level', 'Graduate / Masteral')
             ->count();
-            
+
         $college = $totalCollege - $graduateStudies;
 
         return view('dashboard', compact(
-            'kinderElem', 
-            'juniorHigh', 
-            'seniorHigh', 
-            'college', 
+            'kinderElem',
+            'juniorHigh',
+            'seniorHigh',
+            'college',
             'graduateStudies',
             'totalBasic',
             'totalCollege'
@@ -73,17 +73,18 @@ class DashboardController extends Controller
         ]);
 
         // Local Events
-        $events = CalendarEvent::where(function($query) {
-                $query->where('user_id', Auth::id())
-                      ->orWhere('is_global', true);
-            })
+        $events = CalendarEvent::where(function ($query) {
+            $query->where('user_id', Auth::id())
+                ->orWhere('is_global', true);
+        })
             ->whereMonth('event_date', $request->month)
             ->whereYear('event_date', $request->year)
             ->orderBy('event_date')
             ->orderBy('event_time')
             ->get()
-            ->map(function($ev) {
+            ->map(function ($ev) {
                 $ev->source = 'local';
+
                 return $ev;
             });
 
@@ -95,9 +96,9 @@ class DashboardController extends Controller
             try {
                 $startOfMonth = sprintf('%04d-%02d-01T00:00:00Z', $request->year, $request->month);
                 $endOfMonth = sprintf('%04d-%02d-%02dT23:59:59Z', $request->year, $request->month, cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year));
-                
-                $url = "https://www.googleapis.com/content/v3/calendars/" . urlencode($googleId) . "/events?key=" . $googleKey . "&timeMin=" . $startOfMonth . "&timeMax=" . $endOfMonth . "&singleEvents=true";
-                
+
+                $url = 'https://www.googleapis.com/content/v3/calendars/'.urlencode($googleId).'/events?key='.$googleKey.'&timeMin='.$startOfMonth.'&timeMax='.$endOfMonth.'&singleEvents=true';
+
                 $response = file_get_contents($url);
                 if ($response) {
                     $googleData = json_decode($response, true);
@@ -105,16 +106,16 @@ class DashboardController extends Controller
                         foreach ($googleData['items'] as $item) {
                             $date = isset($item['start']['date']) ? $item['start']['date'] : substr($item['start']['dateTime'], 0, 10);
                             $time = isset($item['start']['dateTime']) ? substr($item['start']['dateTime'], 11, 5) : null;
-                            
-                            $events->push((object)[
-                                'id' => 'google_' . $item['id'],
+
+                            $events->push((object) [
+                                'id' => 'google_'.$item['id'],
                                 'title' => $item['summary'] ?? '(No Title)',
                                 'description' => $item['description'] ?? null,
                                 'event_date' => $date,
                                 'event_time' => $time,
                                 'color' => '#4285F4', // Google Blue
                                 'source' => 'google',
-                                'htmlLink' => $item['htmlLink'] ?? null
+                                'htmlLink' => $item['htmlLink'] ?? null,
                             ]);
                         }
                     }

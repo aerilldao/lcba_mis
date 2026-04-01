@@ -51,13 +51,13 @@ return new class extends Migration
             $table->dropColumn([
                 'is_balik_aral', 'is_senior_high', 'is_freshman', 'is_transferee',
                 'grade_level', 'school_year', 'section', 'lrn', 'ecs',
-                'last_school_name', 'last_school_year', 'school_id', 'strand', 'semester', 'credentials'
+                'last_school_name', 'last_school_year', 'school_id', 'strand', 'semester', 'credentials',
             ]);
         });
         Schema::table('cg_studies', function (Blueprint $table) {
             $table->dropColumn([
                 'is_freshman', 'is_transferee', 'is_cross_enrollee', 'is_returnee',
-                'course', 'major', 'year_level', 'school_year', 'section', 'semester', 'credentials'
+                'course', 'major', 'year_level', 'school_year', 'section', 'semester', 'credentials',
             ]);
         });
     }

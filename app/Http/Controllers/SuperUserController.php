@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\CalendarEvent;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SuperUserController extends Controller
@@ -17,10 +17,11 @@ class SuperUserController extends Controller
 
         $totalUsers = User::count();
         $totalEvents = CalendarEvent::count();
-        
+
         // Fetch all users with status
-        $users = User::orderBy('last_activity_at', 'desc')->get()->map(function($user) {
+        $users = User::orderBy('last_activity_at', 'desc')->get()->map(function ($user) {
             $user->is_online = $user->last_activity_at && $user->last_activity_at->gt(now()->subMinutes(5));
+
             return $user;
         });
 
@@ -50,7 +51,7 @@ class SuperUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
             'password' => 'nullable|string|min:8',
         ]);
 
@@ -71,10 +72,9 @@ class SuperUserController extends Controller
         }
 
         $user->delete();
+
         return response()->json(['status' => 'success']);
     }
-
-
 
     public function killSession(User $user)
     {
@@ -95,7 +95,7 @@ class SuperUserController extends Controller
         // and reset activity tracking
         $user->forceFill([
             'remember_token' => \Illuminate\Support\Str::random(60),
-            'last_activity_at' => null
+            'last_activity_at' => null,
         ])->save();
 
         return response()->json(['status' => 'success']);
@@ -107,13 +107,13 @@ class SuperUserController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $users = User::all()->map(function($user) {
+        $users = User::all()->map(function ($user) {
             return [
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->email === 'SUPERUSER' ? 'ROOT COMMAND' : 'STAFF ACCESS',
                 'joined' => $user->created_at->format('Y-m-d'),
-                'password_status' => 'SECURE (BCRYPT)'
+                'password_status' => 'SECURE (BCRYPT)',
             ];
         });
 
@@ -134,25 +134,31 @@ class SuperUserController extends Controller
             $enrollments = \App\Models\EnrollmentRecord::all();
 
             $sql = "-- LCBA MIS - System Registry Export\n";
-            $sql .= "-- Generated: " . now()->toDateTimeString() . "\n";
+            $sql .= '-- Generated: '.now()->toDateTimeString()."\n";
             $sql .= "-- Tables: users, calendar_events, student_info, enrollment_records\n\n";
             $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
             // Helper to generate INSERT statements
-            $generateInserts = function($collection, $tableName) {
+            $generateInserts = function ($collection, $tableName) {
                 $output = "--\n-- Exporting Data for Table: $tableName\n--\n";
                 foreach ($collection as $model) {
                     $attrs = $model->getAttributes();
                     $columns = array_keys($attrs);
-                    $values = array_map(function($val) {
-                        if (is_null($val)) return 'NULL';
-                        if (is_numeric($val) && !is_string($val)) return $val;
-                        return "'" . str_replace(["'", "\n", "\r"], ["''", "\\n", "\\r"], $val) . "'";
+                    $values = array_map(function ($val) {
+                        if (is_null($val)) {
+                            return 'NULL';
+                        }
+                        if (is_numeric($val) && ! is_string($val)) {
+                            return $val;
+                        }
+
+                        return "'".str_replace(["'", "\n", "\r"], ["''", '\\n', '\\r'], $val)."'";
                     }, array_values($attrs));
 
-                    $output .= "INSERT INTO $tableName (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ") ON DUPLICATE KEY UPDATE id=id;\n";
+                    $output .= "INSERT INTO $tableName (".implode(', ', $columns).') VALUES ('.implode(', ', $values).") ON DUPLICATE KEY UPDATE id=id;\n";
                 }
-                return $output . "\n";
+
+                return $output."\n";
             };
 
             $sql .= $generateInserts($users, 'users');
@@ -162,18 +168,18 @@ class SuperUserController extends Controller
 
             $sql .= "\nSET FOREIGN_KEY_CHECKS = 1;\n";
 
-            $filename = 'lcba_registry_dump_' . now()->format('Y-m-d_His') . '.sql';
-            
+            $filename = 'lcba_registry_dump_'.now()->format('Y-m-d_His').'.sql';
+
             return response()->streamDownload(function () use ($sql) {
                 echo $sql;
             }, $filename, [
                 'Content-Type' => 'application/x-sql',
                 'Cache-Control' => 'no-cache, no-store, must-revalidate',
                 'Pragma' => 'no-cache',
-                'Expires' => '0'
+                'Expires' => '0',
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'SQL Export failed: ' . $e->getMessage());
+            return back()->with('error', 'SQL Export failed: '.$e->getMessage());
         }
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SuperUserController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\SuperUserController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
