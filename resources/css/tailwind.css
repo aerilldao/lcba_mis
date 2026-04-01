@@ -1,5 +1,3 @@
-@import "tailwindcss";
-
 /* -------------------------------------------------------------------------- */
 /* CORE THEME VARIABLES                                                       */
 /* -------------------------------------------------------------------------- */
@@ -806,6 +804,7 @@ body {
     width: auto;
     min-width: 650px;
     display: flex;
+    flex-direction: column;
     gap: 1.25rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     opacity: 0;
@@ -950,7 +949,82 @@ body {
 .status-option.active {
     transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--secondary-color);
 }
+
+.filter-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--card-border);
+    width: 100%;
+}
+
+.btn-apply-filters {
+    background: var(--secondary-color);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn-apply-filters:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-reset-filters {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-reset-filters:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.year-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.year-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.year-option:hover,
+.year-option.active {
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
 
 /* Records Table Styling */
 .records-table {

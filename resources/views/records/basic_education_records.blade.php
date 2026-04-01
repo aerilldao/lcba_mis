@@ -36,52 +36,63 @@
                 </button>
 
                 <div class="filter-dropdown" id="filter-dropdown">
-                    <!-- Card 1: Name Sorting -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Sorting</div>
-                        <div class="sort-toggle-row">
-                            <span class="sort-label">Student Name</span>
-                            <div class="sort-trigger" id="name-sort-trigger" onclick="toggleSort()">
-                                <span id="sort-direction-text">ASC</span>
-                                <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m16 10-4-4-4 4"/><path d="m8 14 4 4 4-4"/></svg>
+                    <div style="display: flex; gap: 1.25rem; width: 100%;">
+                        <!-- Name Sorting -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Sorting</div>
+                            <div class="sort-toggle-row">
+                                <span style="font-size: 0.9rem; font-weight: 600; color: #fff;">Student Name</span>
+                                <div class="sort-trigger" id="name-sort-trigger" onclick="toggleSort()">
+                                    <span id="sort-direction-text">{{ request('sort') === 'desc' ? 'DESC' : 'ASC' }}</span>
+                                    <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        @if(request('sort') === 'desc')
+                                            <path d="m16 14-4 4-4-4"/><path d="m8 10 4-4 4 4"/>
+                                        @else
+                                            <path d="m16 10-4-4-4 4"/><path d="m8 14 4 4 4-4"/>
+                                        @endif
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grade Level -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Grade Level</div>
+                            <div class="scroll-list" id="grade-list">
+                                @foreach(['Kinder', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'] as $grade)
+                                    <div class="list-item {{ request('grade') === $grade ? 'active' : '' }}" onclick="selectFilter(this, 'grade', '{{ $grade }}')">{{ $grade }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Status Filter</div>
+                            <div class="status-grid">
+                                <div class="status-option complete {{ request('status') === 'Complete' ? 'active' : '' }}" onclick="selectFilter(this, 'status', 'Complete')">
+                                    <div class="status-dot"></div>
+                                    <span>Complete</span>
+                                </div>
+                                <div class="status-option incomplete {{ request('status') === 'Pending' ? 'active' : '' }}" onclick="selectFilter(this, 'status', 'Pending')">
+                                    <div class="status-dot"></div>
+                                    <span>Pending</span>
+                                </div>
+                                <div class="status-option error {{ request('status') === 'Error' ? 'active' : '' }}" onclick="selectFilter(this, 'status', 'Error')">
+                                    <div class="status-dot"></div>
+                                    <span>Error</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 2: Grade Level Scroll -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Grade Level</div>
-                        <div class="grade-scroll-container">
-                            <div class="grade-item" onclick="selectGrade(this, 'Kinder')">Kinder</div>
-                            <div class="grade-item" onclick="selectGrade(this, 'Grade 1')">Grade 1</div>
-                            <div class="grade-item" onclick="selectGrade(this, 'Grade 2')">Grade 2</div>
-                            <div class="grade-item" onclick="selectGrade(this, 'Grade 3')">Grade 3</div>
-                            <div class="grade-item" onclick="selectGrade(this, 'Grade 4')">Grade 4</div>
-                            <div class="grade-item" onclick="selectGrade(this, 'Grade 5')">Grade 5</div>
-                            <div class="grade-item" onclick="selectGrade(this, 'Grade 6')">Grade 6</div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Status Grid -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Status Filter</div>
-                        <div class="status-grid">
-                            <div class="status-option complete" onclick="selectStatus(this, 'Complete')">
-                                <div class="status-dot"></div>
-                                <span>Complete</span>
-                            </div>
-                            <div class="status-option incomplete" onclick="selectStatus(this, 'Incomplete')">
-                                <div class="status-dot"></div>
-                                <span>Pending</span>
-                            </div>
-                            <div class="status-option error" onclick="selectStatus(this, 'Error')">
-                                <div class="status-dot"></div>
-                                <span>Error</span>
-                            </div>
-                        </div>
+                    <!-- Action Buttons -->
+                    <div class="filter-footer">
+                        <button class="btn-reset-filters" onclick="resetFilters()">Reset All</button>
+                        <button class="btn-apply-filters" onclick="applyFilters()">Apply Filters</button>
                     </div>
                 </div>
             </div>
+
 
             <table class="records-table">
                 <thead>
@@ -134,9 +145,11 @@
     </main>
 
     <script>
-        let currentSort = 'asc';
-        let activeGrade = null;
-        let activeStatus = null;
+        const filterState = {
+            sort: "{{ request('sort', 'asc') }}",
+            grade: "{{ request('grade') }}",
+            status: "{{ request('status') }}"
+        };
 
         document.getElementById('filter-btn').addEventListener('click', function(e) {
             e.stopPropagation();
@@ -153,40 +166,42 @@
         function toggleSort() {
             const text = document.getElementById('sort-direction-text');
             const icon = document.getElementById('sort-icon');
+            filterState.sort = filterState.sort === 'asc' ? 'desc' : 'asc';
             
-            if (currentSort === 'asc') {
-                currentSort = 'desc';
-                text.innerText = 'DESC';
+            text.innerText = filterState.sort.toUpperCase();
+            if (filterState.sort === 'desc') {
                 icon.innerHTML = '<path d="m16 14-4 4-4-4"/><path d="m8 10 4-4 4 4"/>';
             } else {
-                currentSort = 'asc';
-                text.innerText = 'ASC';
                 icon.innerHTML = '<path d="m16 10-4-4-4 4"/><path d="m8 14 4 4 4-4"/>';
             }
-            console.log(`Sort changed to: ${currentSort}`);
         }
 
-        function selectGrade(element, grade) {
-            document.querySelectorAll('.grade-item').forEach(el => el.classList.remove('active'));
-            if (activeGrade === grade) {
-                activeGrade = null;
+        function selectFilter(element, type, value) {
+            // Remove active from peers
+            const selector = element.classList.contains('list-item') ? '.list-item' : '.status-option';
+            element.parentElement.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
+
+            if (filterState[type] === value) {
+                filterState[type] = '';
             } else {
                 element.classList.add('active');
-                activeGrade = grade;
+                filterState[type] = value;
             }
-            console.log(`Grade selected: ${activeGrade}`);
         }
 
-        function selectStatus(element, status) {
-            document.querySelectorAll('.status-option').forEach(el => el.classList.remove('active'));
-            if (activeStatus === status) {
-                activeStatus = null;
-            } else {
-                element.classList.add('active');
-                activeStatus = status;
-            }
-            console.log(`Status selected: ${activeStatus}`);
+        function applyFilters() {
+            const params = new URLSearchParams();
+            if (filterState.sort && filterState.sort !== 'asc') params.set('sort', filterState.sort);
+            if (filterState.grade) params.set('grade', filterState.grade);
+            if (filterState.status) params.set('status', filterState.status);
+
+            window.location.href = "{{ route('basic_education_records') }}?" + params.toString();
+        }
+
+        function resetFilters() {
+            window.location.href = "{{ route('basic_education_records') }}";
         }
     </script>
+
 </body>
 </html>

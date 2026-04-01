@@ -35,76 +35,73 @@
                 </button>
 
                 <div class="filter-dropdown" id="filter-dropdown">
-                    <!-- Name Sorting -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Sorting</div>
-                        <div class="sort-toggle-row">
-                            <span style="font-size: 0.9rem; font-weight: 600;">Student Name</span>
-                            <div class="sort-trigger" id="name-sort-trigger" onclick="toggleSort()">
-                                <span id="sort-direction-text">ASC</span>
-                                <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m16 10-4-4-4 4"/><path d="m8 14 4 4 4-4"/></svg>
+                    <div style="display: flex; gap: 1.25rem; width: 100%;">
+                        <!-- Name Sorting -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Sorting</div>
+                            <div class="sort-toggle-row">
+                                <span style="font-size: 0.9rem; font-weight: 600; color: #fff;">Student Name</span>
+                                <div class="sort-trigger" id="name-sort-trigger" onclick="toggleSort()">
+                                    <span id="sort-direction-text">{{ request('sort') === 'desc' ? 'DESC' : 'ASC' }}</span>
+                                    <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        @if(request('sort') === 'desc')
+                                            <path d="m16 14-4 4-4-4"/><path d="m8 10 4-4 4 4"/>
+                                        @else
+                                            <path d="m16 10-4-4-4 4"/><path d="m8 14 4 4 4-4"/>
+                                        @endif
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- College Programs -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Programs</div>
+                            <div class="scroll-list" id="program-list">
+                                @foreach(['BSCpE', 'BSCS', 'BS Political Science', 'BSE', 'BSA', 'BSBA', 'BS EDUC', 'BSPSYCH', 'MAEd', 'MBA', 'MSP', 'MM'] as $prog)
+                                    <div class="list-item {{ request('program') === $prog ? 'active' : '' }}" onclick="selectFilter(this, 'program', '{{ $prog }}')">{{ $prog }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Year Level -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Year Level</div>
+                            <div class="year-grid">
+                                @foreach(['1st', '2nd', '3rd', '4th', '5th'] as $yr)
+                                    <div class="year-option {{ request('year') === $yr ? 'active' : '' }}" onclick="selectFilter(this, 'year', '{{ $yr }}')">{{ $yr }}</div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="filter-inner-card">
+                            <div class="filter-group-title">Status Filter</div>
+                            <div class="status-grid">
+                                <div class="status-option complete {{ request('status') === 'Complete' ? 'active' : '' }}" onclick="selectFilter(this, 'status', 'Complete')">
+                                    <div class="status-dot"></div>
+                                    <span>Complete</span>
+                                </div>
+                                <div class="status-option incomplete {{ request('status') === 'Pending' ? 'active' : '' }}" onclick="selectFilter(this, 'status', 'Pending')">
+                                    <div class="status-dot"></div>
+                                    <span>Pending</span>
+                                </div>
+                                <div class="status-option error {{ request('status') === 'Error' ? 'active' : '' }}" onclick="selectFilter(this, 'status', 'Error')">
+                                    <div class="status-dot"></div>
+                                    <span>Error</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- College Programs -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">College Programs</div>
-                        <div class="scroll-list" id="college-programs-list">
-                            <div class="list-item" onclick="selectItem(this, 'college')">BSCpE</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BSCS</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BS Political Science</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BSE</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BSA</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BSBA</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BS EDUC</div>
-                            <div class="list-item" onclick="selectItem(this, 'college')">BSPSYCH</div>
-                        </div>
-                    </div>
-
-                    <!-- Graduate Studies -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Graduate Studies</div>
-                        <div class="scroll-list" id="graduate-programs-list">
-                            <div class="list-item" onclick="selectItem(this, 'graduate')">MAEd</div>
-                            <div class="list-item" onclick="selectItem(this, 'graduate')">MBA</div>
-                            <div class="list-item" onclick="selectItem(this, 'graduate')">MSP</div>
-                            <div class="list-item" onclick="selectItem(this, 'graduate')">MM</div>
-                        </div>
-                    </div>
-
-                    <!-- Year Level -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Year Level</div>
-                        <div class="year-grid">
-                            <div class="year-option" onclick="selectYear(this, '1st')">1st</div>
-                            <div class="year-option" onclick="selectYear(this, '2nd')">2nd</div>
-                            <div class="year-option" onclick="selectYear(this, '3rd')">3rd</div>
-                            <div class="year-option" onclick="selectYear(this, '4th')">4th</div>
-                            <div class="year-option" onclick="selectYear(this, '5th')">5th</div>
-                        </div>
-                    </div>
-
-                    <!-- Status Filter -->
-                    <div class="filter-inner-card">
-                        <div class="filter-group-title">Status Filter</div>
-                        <div class="status-grid">
-                            <div class="status-option complete" onclick="selectStatus(this, 'Complete')">
-                                <div class="status-dot"></div>
-                                <span style="font-size: 0.65rem;">Complete</span>
-                            </div>
-                            <div class="status-option incomplete" onclick="selectStatus(this, 'Incomplete')">
-                                <div class="status-dot"></div>
-                                <span style="font-size: 0.65rem;">Pending</span>
-                            </div>
-                            <div class="status-option error" onclick="selectStatus(this, 'Error')">
-                                <div class="status-dot"></div>
-                                <span style="font-size: 0.65rem;">Error</span>
-                            </div>
-                        </div>
+                    <!-- Action Buttons -->
+                    <div class="filter-footer">
+                        <button class="btn-reset-filters" onclick="resetFilters()">Reset All</button>
+                        <button class="btn-apply-filters" onclick="applyFilters()">Apply Filters</button>
                     </div>
                 </div>
             </div>
+
 
             <table class="records-table">
                 <thead>
@@ -157,11 +154,12 @@
     </main>
 
     <script>
-        let currentSort = 'asc';
-        let activeCollegeProgram = null;
-        let activeGraduateProgram = null;
-        let activeYear = null;
-        let activeStatus = null;
+        const filterState = {
+            sort: "{{ request('sort', 'asc') }}",
+            program: "{{ request('program') }}",
+            year: "{{ request('year') }}",
+            status: "{{ request('status') }}"
+        };
 
         document.getElementById('filter-btn').addEventListener('click', function(e) {
             e.stopPropagation();
@@ -178,41 +176,45 @@
         function toggleSort() {
             const text = document.getElementById('sort-direction-text');
             const icon = document.getElementById('sort-icon');
-            if (currentSort === 'asc') {
-                currentSort = 'desc';
-                text.innerText = 'DESC';
+            filterState.sort = filterState.sort === 'asc' ? 'desc' : 'asc';
+            
+            text.innerText = filterState.sort.toUpperCase();
+            if (filterState.sort === 'desc') {
                 icon.innerHTML = '<path d="m16 14-4 4-4-4"/><path d="m8 10 4-4 4 4"/>';
             } else {
-                currentSort = 'asc';
-                text.innerText = 'ASC';
                 icon.innerHTML = '<path d="m16 10-4-4-4 4"/><path d="m8 14 4 4 4-4"/>';
             }
         }
 
-        function selectItem(element, type) {
-            const selector = type === 'college' ? '#college-programs-list .list-item' : '#graduate-programs-list .list-item';
-            document.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
+        function selectFilter(element, type, value) {
+            // Remove active from peers
+            const selector = element.classList.contains('list-item') ? '.list-item' : 
+                          (element.classList.contains('year-option') ? '.year-option' : '.status-option');
             
-            if (type === 'college') {
-                if (activeCollegeProgram === element.innerText) { activeCollegeProgram = null; }
-                else { element.classList.add('active'); activeCollegeProgram = element.innerText; }
+            element.parentElement.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
+
+            if (filterState[type] === value) {
+                filterState[type] = '';
             } else {
-                if (activeGraduateProgram === element.innerText) { activeGraduateProgram = null; }
-                else { element.classList.add('active'); activeGraduateProgram = element.innerText; }
+                element.classList.add('active');
+                filterState[type] = value;
             }
         }
 
-        function selectYear(element, year) {
-            document.querySelectorAll('.year-option').forEach(el => el.classList.remove('active'));
-            if (activeYear === year) { activeYear = null; }
-            else { element.classList.add('active'); activeYear = year; }
+        function applyFilters() {
+            const params = new URLSearchParams();
+            if (filterState.sort && filterState.sort !== 'asc') params.set('sort', filterState.sort);
+            if (filterState.program) params.set('program', filterState.program);
+            if (filterState.year) params.set('year', filterState.year);
+            if (filterState.status) params.set('status', filterState.status);
+
+            window.location.href = "{{ route('collegiate_records') }}?" + params.toString();
         }
 
-        function selectStatus(element, status) {
-            document.querySelectorAll('.status-option').forEach(el => el.classList.remove('active'));
-            if (activeStatus === status) { activeStatus = null; }
-            else { element.classList.add('active'); activeStatus = status; }
+        function resetFilters() {
+            window.location.href = "{{ route('collegiate_records') }}";
         }
     </script>
+
 </body>
 </html>
